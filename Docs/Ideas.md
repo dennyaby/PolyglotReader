@@ -12,6 +12,11 @@
 10. Create custom plugin system? Everybody can create and propose his owns plugin, and users can browse plugins shop.
 11. Add intergration with WaniKani
 
+
+# Technical Questions
+
+1. Should I implement reader through web view or natively?
+
 ## Overview
 
 

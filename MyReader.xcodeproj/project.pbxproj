@@ -31,6 +31,10 @@
 		B01D7B242AB6697200677F29 /* ReaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01D7B232AB6697200677F29 /* ReaderViewController.swift */; };
 		B01D7B282AB8BEF500677F29 /* WebServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01D7B272AB8BEF500677F29 /* WebServer.swift */; };
 		B01D7B2A2AB8D97600677F29 /* EPUBDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01D7B292AB8D97600677F29 /* EPUBDataProvider.swift */; };
+		B01D7B6A2ABDF4E200677F29 /* EPUBContentDocumentParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01D7B692ABDF4E200677F29 /* EPUBContentDocumentParser.swift */; };
+		B01D7B6C2ABE209300677F29 /* ReaderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01D7B6B2ABE209300677F29 /* ReaderCollectionViewCell.swift */; };
+		B01D7B6E2ABE20D200677F29 /* ReaderCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01D7B6D2ABE20D200677F29 /* ReaderCollectionView.swift */; };
+		B01D7B752ABF8D0C00677F29 /* CSSParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01D7B742ABF8D0C00677F29 /* CSSParser.swift */; };
 		B07780D12AA68F1000A53EF8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07780D02AA68F1000A53EF8 /* AppDelegate.swift */; };
 		B07780D32AA68F1000A53EF8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07780D22AA68F1000A53EF8 /* SceneDelegate.swift */; };
 		B07780DB2AA68F1000A53EF8 /* MyReader.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B07780D92AA68F1000A53EF8 /* MyReader.xcdatamodeld */; };
@@ -92,6 +96,10 @@
 		B01D7B232AB6697200677F29 /* ReaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderViewController.swift; sourceTree = "<group>"; };
 		B01D7B272AB8BEF500677F29 /* WebServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebServer.swift; sourceTree = "<group>"; };
 		B01D7B292AB8D97600677F29 /* EPUBDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPUBDataProvider.swift; sourceTree = "<group>"; };
+		B01D7B692ABDF4E200677F29 /* EPUBContentDocumentParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPUBContentDocumentParser.swift; sourceTree = "<group>"; };
+		B01D7B6B2ABE209300677F29 /* ReaderCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderCollectionViewCell.swift; sourceTree = "<group>"; };
+		B01D7B6D2ABE20D200677F29 /* ReaderCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderCollectionView.swift; sourceTree = "<group>"; };
+		B01D7B742ABF8D0C00677F29 /* CSSParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSParser.swift; sourceTree = "<group>"; };
 		B07780CD2AA68F1000A53EF8 /* MyReader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B07780D02AA68F1000A53EF8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B07780D22AA68F1000A53EF8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -168,6 +176,8 @@
 				B01D7B002AAFC70300677F29 /* EPUBParserXMLContainerParser.swift */,
 				B01D7B022AB0FD9A00677F29 /* EPUBParserModels.swift */,
 				B01D7B042AB11AF300677F29 /* EPUBParserOPFContainerParser.swift */,
+				B01D7B692ABDF4E200677F29 /* EPUBContentDocumentParser.swift */,
+				B01D7B742ABF8D0C00677F29 /* CSSParser.swift */,
 			);
 			path = EPUBParser;
 			sourceTree = "<group>";
@@ -229,8 +239,18 @@
 			isa = PBXGroup;
 			children = (
 				B01D7B232AB6697200677F29 /* ReaderViewController.swift */,
+				B01D7B6B2ABE209300677F29 /* ReaderCollectionViewCell.swift */,
+				B01D7B6D2ABE20D200677F29 /* ReaderCollectionView.swift */,
 			);
 			path = Reader;
+			sourceTree = "<group>";
+		};
+		B01D7B712ABF891800677F29 /* EPUBDataProvider */ = {
+			isa = PBXGroup;
+			children = (
+				B01D7B292AB8D97600677F29 /* EPUBDataProvider.swift */,
+			);
+			path = EPUBDataProvider;
 			sourceTree = "<group>";
 		};
 		B07780C42AA68F1000A53EF8 = {
@@ -331,6 +351,7 @@
 		B07781122AA6924500A53EF8 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				B01D7B712ABF891800677F29 /* EPUBDataProvider */,
 				B01D7B172AB6270700677F29 /* Settings */,
 				B01D7B152AB626F500677F29 /* DataStorage */,
 				B01D7B062AB26DC500677F29 /* WebServer */,
@@ -338,7 +359,6 @@
 				B07781192AA7D4FF00A53EF8 /* AppFileManager.swift */,
 				B01D7AE42AABBF5000677F29 /* BookImportManager.swift */,
 				B01D7B0B2AB50A2300677F29 /* ReadSessionManager.swift */,
-				B01D7B292AB8D97600677F29 /* EPUBDataProvider.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -507,12 +527,16 @@
 				B07781112AA6921000A53EF8 /* BookListCollectionViewDataSource.swift in Sources */,
 				B01D7AE52AABBF5000677F29 /* BookImportManager.swift in Sources */,
 				B01D7B032AB0FD9A00677F29 /* EPUBParserModels.swift in Sources */,
+				B01D7B6A2ABDF4E200677F29 /* EPUBContentDocumentParser.swift in Sources */,
 				B01D7AFC2AAFC53C00677F29 /* SharedDateFormatter.swift in Sources */,
 				B01D7AEA2AABCB7600677F29 /* EPUBParser.swift in Sources */,
 				B077811F2AA8EC9100A53EF8 /* AppManager.swift in Sources */,
+				B01D7B752ABF8D0C00677F29 /* CSSParser.swift in Sources */,
 				B01D7B1B2AB6276600677F29 /* UserSettings.swift in Sources */,
+				B01D7B6E2ABE20D200677F29 /* ReaderCollectionView.swift in Sources */,
 				B07781142AA6924B00A53EF8 /* DataStorage.swift in Sources */,
 				B01D7AFE2AAFC66500677F29 /* AppDateFormatters.swift in Sources */,
+				B01D7B6C2ABE209300677F29 /* ReaderCollectionViewCell.swift in Sources */,
 				B077810F2AA6910C00A53EF8 /* NSConstraintInArray.swift in Sources */,
 				B077810B2AA6903300A53EF8 /* BookListHeaderView.swift in Sources */,
 				B077811A2AA7D4FF00A53EF8 /* AppFileManager.swift in Sources */,

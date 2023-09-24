@@ -11,11 +11,20 @@ extension EPUBParser {
     enum MediaType: Equatable {
         case unknown(String)
         case oebpsPackage
+        case htmlXml
+        case imagePng
+        case textCSS
         
         init(from: String) {
             switch from {
             case "application/oebps-package+xml":
                 self = .oebpsPackage
+            case "application/xhtml+xml":
+                self = .htmlXml
+            case "image/png":
+                self = .imagePng
+            case "text/css":
+                self = .textCSS
             default:
                 self = .unknown(from)
             }
