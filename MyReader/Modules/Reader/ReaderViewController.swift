@@ -122,6 +122,11 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
                 self.pagesFrames.append(ctframe)
             }
         }
+        // TODO: This could be bottleneck, I need to optimize this somehow for huge texts
+        /*
+         
+         Idea - When I open the book, I need to find the place I am in. Is there a faster way then current? If yes, I can find page I need using binary search, display it and then calculate in background all other pages going repeadely in both directions. There should be something like fault system for pages (like I have full array of pagesFrames, but some are loaded and some no.
+         */
         print("Time reload book layout = \(Date().timeIntervalSince(start))")
     }
     

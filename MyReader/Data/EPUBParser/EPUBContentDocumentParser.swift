@@ -10,11 +10,23 @@ import UIKit.UIColor
 
 final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
     
+    struct NumericValue {
+        
+        let points: CGFloat
+        
+        // let pixes: CGFloat
+        
+        init?(string: String?) {
+            guard let string = string, let doubleValue = Double(string) else {
+                return nil
+            }
+            self.points = CGFloat(doubleValue)
+            // TODO: Handle all possible formats
+        }
+    }
+    
     struct DocumentResult {
         struct Element {
-            let text: String
-            let attributes: Attributes
-            
             struct Attributes {
                 struct Font {
                     enum Style {
@@ -35,9 +47,36 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
                     }
                 }
                 
+                struct Image {
+                    let alt: String?
+                    let width: NumericValue? // General attribute, not just for image? As well as height
+                    let heigth: NumericValue?
+                }
+                
+                struct Link {
+                    let link: String?
+                }
+                
                 var textColor: UIColor?
                 var font: Font?
+                var image: Image?
+                var link: Link?
+                
+                init(textColor: UIColor? = nil, font: Font? = nil, image: Image? = nil, link: Link? = nil) {
+                    self.textColor = textColor
+                    self.font = font
+                    self.image = image
+                    self.link = link
+                }
             }
+            
+            enum ElementType {
+                case text(String)
+                case image(String)
+            }
+            
+            let elementType: ElementType
+            let attributes: Attributes
         }
         
         let elements: [Element]
@@ -121,6 +160,7 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
         case h5
         case h6
         case head
+        case img
         case other(String)
         
         init(from: String) {
@@ -136,6 +176,7 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
             case "h5": self = .h5
             case "h6": self = .h6
             case "head": self = .head
+            case "img": self = .img
             default: self = .other(from)
             }
         }
@@ -196,7 +237,7 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
         switch component {
         case .text(let text):
             if text != "" {
-                return [.init(text: text, attributes: attributes)]
+                return [.init(elementType: .text(text), attributes: attributes)]
             } else {
                 return []
             }
@@ -206,9 +247,9 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
                 loadResourcesFrom(head: component)
                 return []
             case .a:
-                newAttributes.textColor = .red
+                newAttributes.link = .init(link: element.attributes["href"])
             case .div, .p:
-                result.append(.init(text: "\n\n", attributes: newAttributes))
+                result.append(.init(elementType: .text("\n\n"), attributes: newAttributes))
             case .h1, .h2, .h3, .h4, .h5, .h6:
                 var font = attributes.font ?? .init()
                 font.styles.insert(.bold)
@@ -225,7 +266,13 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
                 font.sizeMultiplier = multiplier
                 newAttributes.font = font
                 
-                result.append(.init(text: "\n\n", attributes: newAttributes))
+
+                result.append(.init(elementType: .text("\n\n"), attributes: newAttributes))
+            case .img:
+                if let src = element.attributes["src"] {
+                    newAttributes.image = .init(alt: element.attributes["alt"], width: .init(string: element.attributes["width"]), heigth: .init(string: element.attributes["height"]))
+                    result.append(.init(elementType: .image(src), attributes: newAttributes))
+                }
             default:
                 break
             }
