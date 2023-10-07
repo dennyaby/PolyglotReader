@@ -52,6 +52,17 @@
 		B07781182AA7CE0F00A53EF8 /* CDDataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07781172AA7CE0F00A53EF8 /* CDDataStorage.swift */; };
 		B077811A2AA7D4FF00A53EF8 /* AppFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07781192AA7D4FF00A53EF8 /* AppFileManager.swift */; };
 		B077811F2AA8EC9100A53EF8 /* AppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B077811E2AA8EC9100A53EF8 /* AppManager.swift */; };
+		B0C59D742AC8B8C6001525B4 /* ImageFileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C59D732AC8B8C6001525B4 /* ImageFileHelper.swift */; };
+		B0C59D772ACE1AE9001525B4 /* CSSParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C59D762ACE1AE9001525B4 /* CSSParserTests.swift */; };
+		B0C59D7A2ACE1B79001525B4 /* simple.css in Resources */ = {isa = PBXBuildFile; fileRef = B0C59D792ACE1B79001525B4 /* simple.css */; };
+		B0C59D7D2ACE1C4B001525B4 /* TestBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C59D7C2ACE1C4B001525B4 /* TestBundle.swift */; };
+		B0C59D7F2ACE24E1001525B4 /* HTMLElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C59D7E2ACE24E1001525B4 /* HTMLElement.swift */; };
+		B0C59D812ACF0726001525B4 /* complex_selectors.css in Resources */ = {isa = PBXBuildFile; fileRef = B0C59D802ACF0726001525B4 /* complex_selectors.css */; };
+		B0C59D852AD0C579001525B4 /* CSSProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C59D842AD0C579001525B4 /* CSSProperty.swift */; };
+		B0C59D872AD0C5B6001525B4 /* CSSParserResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C59D862AD0C5B6001525B4 /* CSSParserResult.swift */; };
+		B0C59D892AD0C623001525B4 /* CSSColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C59D882AD0C623001525B4 /* CSSColor.swift */; };
+		B0C59D8B2AD1A18D001525B4 /* CSSColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C59D8A2AD1A18D001525B4 /* CSSColorTests.swift */; };
+		B0C59D8D2AD1A62A001525B4 /* UIColor+RGBA.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C59D8C2AD1A62A001525B4 /* UIColor+RGBA.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -122,6 +133,17 @@
 		B07781192AA7D4FF00A53EF8 /* AppFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFileManager.swift; sourceTree = "<group>"; };
 		B077811C2AA8EB9100A53EF8 /* Ideas.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Ideas.md; sourceTree = "<group>"; };
 		B077811E2AA8EC9100A53EF8 /* AppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppManager.swift; sourceTree = "<group>"; };
+		B0C59D732AC8B8C6001525B4 /* ImageFileHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFileHelper.swift; sourceTree = "<group>"; };
+		B0C59D762ACE1AE9001525B4 /* CSSParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSParserTests.swift; sourceTree = "<group>"; };
+		B0C59D792ACE1B79001525B4 /* simple.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = simple.css; sourceTree = "<group>"; };
+		B0C59D7C2ACE1C4B001525B4 /* TestBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBundle.swift; sourceTree = "<group>"; };
+		B0C59D7E2ACE24E1001525B4 /* HTMLElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLElement.swift; sourceTree = "<group>"; };
+		B0C59D802ACF0726001525B4 /* complex_selectors.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = complex_selectors.css; sourceTree = "<group>"; };
+		B0C59D842AD0C579001525B4 /* CSSProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSProperty.swift; sourceTree = "<group>"; };
+		B0C59D862AD0C5B6001525B4 /* CSSParserResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSParserResult.swift; sourceTree = "<group>"; };
+		B0C59D882AD0C623001525B4 /* CSSColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSColor.swift; sourceTree = "<group>"; };
+		B0C59D8A2AD1A18D001525B4 /* CSSColorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSColorTests.swift; sourceTree = "<group>"; };
+		B0C59D8C2AD1A62A001525B4 /* UIColor+RGBA.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+RGBA.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,12 +194,12 @@
 		B01D7AFF2AAFC6ED00677F29 /* EPUBParser */ = {
 			isa = PBXGroup;
 			children = (
+				B0C59D752ACCB9BE001525B4 /* Models */,
 				B01D7AE92AABCB7600677F29 /* EPUBParser.swift */,
 				B01D7B002AAFC70300677F29 /* EPUBParserXMLContainerParser.swift */,
 				B01D7B022AB0FD9A00677F29 /* EPUBParserModels.swift */,
 				B01D7B042AB11AF300677F29 /* EPUBParserOPFContainerParser.swift */,
 				B01D7B692ABDF4E200677F29 /* EPUBContentDocumentParser.swift */,
-				B01D7B742ABF8D0C00677F29 /* CSSParser.swift */,
 			);
 			path = EPUBParser;
 			sourceTree = "<group>";
@@ -196,6 +218,7 @@
 			children = (
 				B01D7B0E2AB50DD900677F29 /* RandomStringGenerator.swift */,
 				B01D7B102AB5183000677F29 /* Log.swift */,
+				B0C59D732AC8B8C6001525B4 /* ImageFileHelper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -293,7 +316,11 @@
 		B07780E92AA68F1100A53EF8 /* MyReaderTests */ = {
 			isa = PBXGroup;
 			children = (
+				B0C59D7B2ACE1C43001525B4 /* Extensions */,
+				B0C59D782ACE1B25001525B4 /* Data */,
 				B07780EA2AA68F1100A53EF8 /* MyReaderTests.swift */,
+				B0C59D762ACE1AE9001525B4 /* CSSParserTests.swift */,
+				B0C59D8A2AD1A18D001525B4 /* CSSColorTests.swift */,
 			);
 			path = MyReaderTests;
 			sourceTree = "<group>";
@@ -344,6 +371,7 @@
 				B077810E2AA6910C00A53EF8 /* NSConstraintInArray.swift */,
 				B01D7AFB2AAFC53C00677F29 /* SharedDateFormatter.swift */,
 				B01D7AFD2AAFC66500677F29 /* AppDateFormatters.swift */,
+				B0C59D8C2AD1A62A001525B4 /* UIColor+RGBA.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -351,6 +379,7 @@
 		B07781122AA6924500A53EF8 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				B0C59D822AD0C568001525B4 /* CSSParser */,
 				B01D7B712ABF891800677F29 /* EPUBDataProvider */,
 				B01D7B172AB6270700677F29 /* Settings */,
 				B01D7B152AB626F500677F29 /* DataStorage */,
@@ -380,6 +409,50 @@
 				B01D7ADD2AAA7E5C00677F29 /* ScreensDoc.md */,
 			);
 			path = Docs;
+			sourceTree = "<group>";
+		};
+		B0C59D752ACCB9BE001525B4 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B0C59D7E2ACE24E1001525B4 /* HTMLElement.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		B0C59D782ACE1B25001525B4 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				B0C59D802ACF0726001525B4 /* complex_selectors.css */,
+				B0C59D792ACE1B79001525B4 /* simple.css */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		B0C59D7B2ACE1C43001525B4 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				B0C59D7C2ACE1C4B001525B4 /* TestBundle.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		B0C59D822AD0C568001525B4 /* CSSParser */ = {
+			isa = PBXGroup;
+			children = (
+				B0C59D832AD0C572001525B4 /* Models */,
+				B01D7B742ABF8D0C00677F29 /* CSSParser.swift */,
+				B0C59D862AD0C5B6001525B4 /* CSSParserResult.swift */,
+			);
+			path = CSSParser;
+			sourceTree = "<group>";
+		};
+		B0C59D832AD0C572001525B4 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B0C59D842AD0C579001525B4 /* CSSProperty.swift */,
+				B0C59D882AD0C623001525B4 /* CSSColor.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -502,6 +575,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0C59D7A2ACE1B79001525B4 /* simple.css in Resources */,
+				B0C59D812ACF0726001525B4 /* complex_selectors.css in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -522,6 +597,7 @@
 				B07781182AA7CE0F00A53EF8 /* CDDataStorage.swift in Sources */,
 				B01D7B012AAFC70300677F29 /* EPUBParserXMLContainerParser.swift in Sources */,
 				B01D7B242AB6697200677F29 /* ReaderViewController.swift in Sources */,
+				B0C59D7F2ACE24E1001525B4 /* HTMLElement.swift in Sources */,
 				B01D7B112AB5183000677F29 /* Log.swift in Sources */,
 				B07780D12AA68F1000A53EF8 /* AppDelegate.swift in Sources */,
 				B07781112AA6921000A53EF8 /* BookListCollectionViewDataSource.swift in Sources */,
@@ -531,6 +607,8 @@
 				B01D7AFC2AAFC53C00677F29 /* SharedDateFormatter.swift in Sources */,
 				B01D7AEA2AABCB7600677F29 /* EPUBParser.swift in Sources */,
 				B077811F2AA8EC9100A53EF8 /* AppManager.swift in Sources */,
+				B0C59D8D2AD1A62A001525B4 /* UIColor+RGBA.swift in Sources */,
+				B0C59D872AD0C5B6001525B4 /* CSSParserResult.swift in Sources */,
 				B01D7B752ABF8D0C00677F29 /* CSSParser.swift in Sources */,
 				B01D7B1B2AB6276600677F29 /* UserSettings.swift in Sources */,
 				B01D7B6E2ABE20D200677F29 /* ReaderCollectionView.swift in Sources */,
@@ -552,10 +630,13 @@
 				B01D7B052AB11AF300677F29 /* EPUBParserOPFContainerParser.swift in Sources */,
 				B07781162AA7CD0100A53EF8 /* Book.swift in Sources */,
 				B01D7B0F2AB50DD900677F29 /* RandomStringGenerator.swift in Sources */,
+				B0C59D892AD0C623001525B4 /* CSSColor.swift in Sources */,
+				B0C59D852AD0C579001525B4 /* CSSProperty.swift in Sources */,
 				B01D7AE32AABB40500677F29 /* ColorStyle.swift in Sources */,
 				B01D7AE12AAA814C00677F29 /* ButtonStyle.swift in Sources */,
 				B01D7B192AB6271000677F29 /* UserSettingsAttribute.swift in Sources */,
 				B07780D32AA68F1000A53EF8 /* SceneDelegate.swift in Sources */,
+				B0C59D742AC8B8C6001525B4 /* ImageFileHelper.swift in Sources */,
 				B01D7B282AB8BEF500677F29 /* WebServer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -564,6 +645,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0C59D7D2ACE1C4B001525B4 /* TestBundle.swift in Sources */,
+				B0C59D8B2AD1A18D001525B4 /* CSSColorTests.swift in Sources */,
+				B0C59D772ACE1AE9001525B4 /* CSSParserTests.swift in Sources */,
 				B07780EB2AA68F1100A53EF8 /* MyReaderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

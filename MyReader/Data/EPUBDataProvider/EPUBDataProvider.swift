@@ -13,12 +13,40 @@ class EPUBDataProvider: Loggable {
     static let textColor = UIColor.black
     static let fontSize: CGFloat = 20
     
-    typealias Content = [EPUBContentDocumentParser.DocumentResult]
+    typealias Content = EPUBContentDocumentParser.DocumentResult
     
     // MARK: - Nested Types
     
     struct UserTextSettings {
         let fontMultiplier: CGFloat
+    }
+    
+    struct Result {
+        let attributedString: NSAttributedString
+        let images: [ImageInfo]
+    }
+    
+    struct ImageInfo {
+        let width: CGFloat
+        let height: CGFloat
+        let location: Int
+        let url: URL
+    }
+    
+    private struct Document {
+        let url: URL
+        let content: Content
+    }
+    
+    private enum ImageSize {
+        case ratio(CGFloat)
+        case fixed(EPUBContentDocumentParser.NumericValue, EPUBContentDocumentParser.NumericValue)
+    }
+    
+    private struct CoreTextRunInfo {
+        let ascent: CGFloat
+        let descent: CGFloat
+        let width: CGFloat
     }
     
     // MARK: - Properties
@@ -38,7 +66,8 @@ class EPUBDataProvider: Loggable {
         return bookParseResult.opfContainerParserResult.manifestItems
     }
     
-    private var bookContent: Content = []
+    private var documents: [Document] = []
+    private var imageSizes: [URL: ImageSize] = [:]
     
     // MARK: - Init
     
@@ -70,16 +99,15 @@ class EPUBDataProvider: Loggable {
     
     // MARK: - Interface
     
-    func bookContents(userTextSettings: UserTextSettings) -> [NSAttributedString] {
-        return apply(userSettings: userTextSettings, to: parseBookContentIfNeeded())
-            .map(mapDocumentResultToAttributedString(_:))
+    func bookContents(userTextSettings: UserTextSettings, pageSize: CGSize) -> [Result] {
+        return parseBookContentIfNeeded().map({ mapDocumentToResult($0, userSettings: userTextSettings, pageSize: pageSize)})
     }
     
     func image(for url: URL) -> UIImage? {
         if let existing = imagesCache.object(forKey: url as NSURL) {
             return existing
         } else {
-            if let image = UIImage(contentsOfFile: url.absoluteString) {
+            if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
                 imagesCache.setObject(image, forKey: url as NSURL)
                 return image
             } else {
@@ -91,8 +119,8 @@ class EPUBDataProvider: Loggable {
     
     // MARK: - Logic
     
-    private func parseBookContentIfNeeded() -> Content {
-        guard bookContent.count == 0 else { return bookContent }
+    private func parseBookContentIfNeeded() -> [Document] {
+        guard documents.count == 0 else { return documents }
         
         let parser = EPUBContentDocumentParser()
         
@@ -103,107 +131,150 @@ class EPUBDataProvider: Loggable {
                     let url = baseBookURL.appendingPathComponent(manifest.href)
                     
                     guard let content = parser.parse(url: url) else { continue }
-                    bookContent.append(content)
+                    documents.append(.init(url: url, content: content))
                 default:
                     break
                 }
             }
         }
-        return bookContent
+        return documents
     }
     
-    private func apply(userSettings: UserTextSettings, to content: Content) -> Content {
-        return content // TODO: Apply settings
-    }
-    
-    private func mapDocumentResultToAttributedString(_ docResult: EPUBContentDocumentParser.DocumentResult) -> NSAttributedString {
-        let result = NSMutableAttributedString()
-        for element in docResult.elements {
+    private func mapDocumentToResult(_ document: Document, userSettings: UserTextSettings, pageSize: CGSize) -> Result {
+        // TODO: Apply settings
+        let resultString = NSMutableAttributedString()
+        var images: [ImageInfo] = []
+        
+        for element in document.content.elements {
             switch element.elementType {
             case .text(let text):
                 var attributes: [NSAttributedString.Key: Any] = [:]
                 
-                let font: UIFont
-                
-                if let fontAttributes = element.attributes.font {
-                    let fontSize = Self.fontSize * fontAttributes.sizeMultiplier
-                    if fontAttributes.styles.contains(.italic) {
-                        font = .italicSystemFont(ofSize: fontSize)
-                    } else if fontAttributes.styles.contains(.bold) {
-                        font = .boldSystemFont(ofSize: fontSize)
-                    } else {
-                        font = .systemFont(ofSize: fontSize)
-                    }
-                } else {
-                    font = .systemFont(ofSize: Self.fontSize)
-                }
-                
-                
+                let fontInfo = element.attributes.font
+                let size = Self.fontSize * fontInfo.sizeMultiplier
+                let font = UIFont.systemFont(ofSize: size).with(traits: fontInfo.traits)
                 
                 attributes[.font] = font
                 attributes[.foregroundColor] = element.attributes.textColor ?? Self.textColor
-                result.append(NSAttributedString(string: text,attributes: attributes))
+                resultString.append(NSAttributedString(string: text,attributes: attributes))
             case .image(let src):
-                guard let imageUrl = getUrl(from: src) else { continue }
+                guard let imageUrl = getUrl(from: src, documentURL: document.url) else { continue }
+                let imageSize = getImageSize(for: imageUrl, attributes: element.attributes)
                 
-//                Using ImageIO
-//
-//                NSURL *imageFileURL = [NSURL fileURLWithPath:...];
-//                CGImageSourceRef imageSource = CGImageSourceCreateWithURL((CFURLRef)imageFileURL, NULL);
-//                if (imageSource == NULL) {
-//                    // Error loading image
-//                    ...
-//                    return;
-//                }
-//
-//                CGFloat width = 0.0f, height = 0.0f;
-//                CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, NULL);
-//
-//                CFRelease(imageSource);
-//
-//                if (imageProperties != NULL) {
-//
-//                    CFNumberRef widthNum  = CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelWidth);
-//                    if (widthNum != NULL) {
-//                        CFNumberGetValue(widthNum, kCFNumberCGFloatType, &width);
-//                    }
-//
-//                    CFNumberRef heightNum = CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelHeight);
-//                    if (heightNum != NULL) {
-//                        CFNumberGetValue(heightNum, kCFNumberCGFloatType, &height);
-//                    }
-//
-//                    // Check orientation and flip size if required
-//                    CFNumberRef orientationNum = CFDictionaryGetValue(imageProperties, kCGImagePropertyOrientation);
-//                    if (orientationNum != NULL) {
-//                        int orientation;
-//                        CFNumberGetValue(orientationNum, kCFNumberIntType, &orientation);
-//                        if (orientation > 4) {
-//                            CGFloat temp = width;
-//                            width = height;
-//                            height = temp;
-//                        }
-//                    }
-
+                let width: CGFloat
+                let height: CGFloat
                 
-                if let imageAttributes = element.attributes.image, let width = imageAttributes.width, let height = imageAttributes.heigth {
+                switch imageSize {
+                case .ratio(let ratio):
+                    let desiredHeight = pageSize.width / ratio
+                    var scaleBy: CGFloat = 1
+                    if desiredHeight > pageSize.height {
+                        scaleBy = pageSize.height / desiredHeight
+                    }
+                    width = pageSize.width * scaleBy
+                    height = desiredHeight * scaleBy
+                case .fixed(let imageWidth, let imageHeight):
+                    var scaleBy: CGFloat = 1
                     
+                    if imageWidth.points > pageSize.width || imageHeight.points > pageSize.height {
+                        scaleBy = min(pageSize.width / imageWidth.points, pageSize.height / imageHeight.points)
+                    }
+                    
+                    width = imageWidth.points * scaleBy
+                    height = imageWidth.points * scaleBy
                 }
                 
+                let extentBuffer = UnsafeMutablePointer<CoreTextRunInfo>.allocate(capacity: 1)
+                extentBuffer.initialize(to: CoreTextRunInfo(ascent: height, descent: 0, width: width))
+                var callbacks = CTRunDelegateCallbacks(version: kCTRunDelegateVersion1, dealloc: { (pointer) in
+                }, getAscent: { (pointer) -> CGFloat in
+                    let d = pointer.assumingMemoryBound(to: CoreTextRunInfo.self)
+                    return d.pointee.ascent
+                }, getDescent: { (pointer) -> CGFloat in
+                    let d = pointer.assumingMemoryBound(to: CoreTextRunInfo.self)
+                    return d.pointee.descent
+                }, getWidth: { (pointer) -> CGFloat in
+                    let d = pointer.assumingMemoryBound(to: CoreTextRunInfo.self)
+                    return d.pointee.width
+                })
+                
+                images.append(.init(width: width, height: height, location: resultString.length, url: imageUrl))
+                
+                let delegate = CTRunDelegateCreate(&callbacks, extentBuffer)
+                let attributedString = NSAttributedString(string: "\u{FFFC}", attributes: [NSAttributedString.Key(kCTRunDelegateAttributeName as String): delegate as Any])
+                resultString.append(attributedString)
             }
             
         }
-        return result
+        return .init(attributedString: resultString, images: images)
+    }
+    
+    private func getImageSize(for url: URL, attributes: EPUBContentDocumentParser.DocumentResult.Element.Attributes) -> ImageSize {
+        if let existing = imageSizes[url] {
+            return existing
+        }
+        
+        let imageSize: ImageSize
+        if let width = attributes.width, let height = attributes.height {
+            imageSize = .fixed(width, height)
+        } else if let imageFileSize = ImageFileHelper.imageSize(from: url) {
+            if let width = attributes.width {
+                if imageFileSize.height != 0  {
+                    let ratio = imageFileSize.width / imageFileSize.height
+                    imageSize = .fixed(width, width / ratio)
+                } else {
+                    imageSize = .fixed(width, width)
+                }
+            } else if let height = attributes.height {
+                if imageFileSize.height != 0 {
+                    let ratio = imageFileSize.width / imageFileSize.height
+                    imageSize = .fixed(height * ratio, height)
+                } else {
+                    imageSize = .fixed(height, height)
+                }
+            } else {
+                if imageFileSize.height != 0 && imageFileSize.width != 0  {
+                    imageSize = .ratio(imageFileSize.width / imageFileSize.height)
+                } else {
+                    imageSize = .ratio(1)
+                }
+            }
+        } else {
+            imageSize = .ratio(1)
+        }
+        imageSizes[url] = imageSize
+        return imageSize
     }
     
     // MARK: - URLs
     
-    private func getUrl(from href: String) -> URL? {
+    private func getUrl(from href: String, documentURL: URL) -> URL? {
         let lowerPrefix = href.prefix(10).lowercased()
         if lowerPrefix.starts(with: "http://") || lowerPrefix.starts(with: "https://") {
             return URL(string: href)
         } else {
-            return baseBookURL.appendingPathComponent(href)
+            return documentURL.deletingLastPathComponent().appendingPathComponent(href)
         }
+    }
+}
+//
+//extension EPUBDataProvider {
+//    final class ImageSizeProvider {
+//        
+//        // MARK: - Interface
+//        
+//        func size(for element: EPUBContentDocumentParser.HTMLComponent.Element) -> CGSize? {
+//            
+//        }
+//    }
+//}
+
+extension UIFont {
+    func with(traits: UIFontDescriptor.SymbolicTraits) -> UIFont {
+        guard let descriptor = self.fontDescriptor.withSymbolicTraits(traits) else {
+            return self
+        }
+        
+        return UIFont(descriptor: descriptor, size: 0)
     }
 }

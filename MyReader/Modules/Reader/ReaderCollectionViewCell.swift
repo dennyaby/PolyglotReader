@@ -8,12 +8,25 @@
 import UIKit
 import CoreText
 
+protocol ReaderCollectionViewCellDelegate: AnyObject {
+    func getImagesToDrawForReaderCollectionViewCell(_ cell: ReaderCollectionViewCell) -> [ReaderCollectionViewCell.ImageInfo]
+}
+
 final class ReaderCollectionViewCell: UICollectionViewCell {
+    
+    // MARK: - Nested Types
+    
+    struct ImageInfo {
+        let image: UIImage
+        let frame: CGRect
+    }
     
     // MARK: - Properties
     
     var ctFrame: CTFrame?
     var leadingSpacing: CGFloat = 0
+    
+    weak var delegate: ReaderCollectionViewCellDelegate?
     
     // MARK: - Init
     
@@ -37,6 +50,11 @@ final class ReaderCollectionViewCell: UICollectionViewCell {
         context.scaleBy(x: 1.0, y: -1.0)
 
         CTFrameDraw(ctFrame, context)
+        
+        for imageInfo in delegate?.getImagesToDrawForReaderCollectionViewCell(self) ?? [] {
+            guard let cgImage = imageInfo.image.cgImage else { continue }
+            context.draw(cgImage, in: imageInfo.frame)
+        }
         
         print("Draw call")
     }

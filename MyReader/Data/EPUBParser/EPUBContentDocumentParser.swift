@@ -16,12 +16,37 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
         
         // let pixes: CGFloat
         
+        // MARK: - Init
+        
         init?(string: String?) {
             guard let string = string, let doubleValue = Double(string) else {
+//                fatalError("Should handle as some value")
                 return nil
             }
-            self.points = CGFloat(doubleValue)
+            self.init(points: CGFloat(doubleValue))
             // TODO: Handle all possible formats
+        }
+        
+        init(points: CGFloat) {
+            self.points = points
+        }
+        
+        // MARK: - Operators
+        
+        static func *(lhs: NumericValue, rhs: NumericValue) -> NumericValue {
+            return .init(points: lhs.points * rhs.points)
+        }
+        
+        static func *(lhs: NumericValue, rhs: CGFloat) -> NumericValue {
+            return .init(points: lhs.points * rhs)
+        }
+        
+        static func /(lhs: NumericValue, rhs: NumericValue) -> NumericValue {
+            return .init(points: lhs.points / rhs.points)
+        }
+        
+        static func /(lhs: NumericValue, rhs: CGFloat) -> NumericValue {
+            return .init(points: lhs.points / rhs)
         }
     }
     
@@ -29,45 +54,29 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
         struct Element {
             struct Attributes {
                 struct Font {
-                    enum Style {
-                        case italic
-                        case bold
-                    }
-                    
-                    var styles: Set<Style>
+                    var traits: UIFontDescriptor.SymbolicTraits
                     var sizeMultiplier: CGFloat
                     
-                    var isNormal: Bool {
-                        return styles.isEmpty
-                    }
-                    
-                    init(styles: Set<Style> = [], sizeMultiplier: CGFloat = 1) {
-                        self.styles = styles
+                    init(traits: UIFontDescriptor.SymbolicTraits = [], sizeMultiplier: CGFloat = 1) {
+                        self.traits = traits
                         self.sizeMultiplier = sizeMultiplier
                     }
                 }
                 
                 struct Image {
-                    let alt: String?
-                    let width: NumericValue? // General attribute, not just for image? As well as height
-                    let heigth: NumericValue?
+                    var alt: String?
                 }
                 
                 struct Link {
-                    let link: String?
+                    var link: String?
                 }
                 
                 var textColor: UIColor?
-                var font: Font?
-                var image: Image?
-                var link: Link?
-                
-                init(textColor: UIColor? = nil, font: Font? = nil, image: Image? = nil, link: Link? = nil) {
-                    self.textColor = textColor
-                    self.font = font
-                    self.image = image
-                    self.link = link
-                }
+                var font = Font()
+                var image = Image()
+                var link = Link()
+                var width: NumericValue?
+                var height: NumericValue?
             }
             
             enum ElementType {
@@ -122,62 +131,15 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
         }
     }
     
-    enum CSSSelectorType {
-        case all
-        case id(String)
-        case elements([String])
-        case classes([String])
-        case classDescendant(String, String)
-        case elementWithClass(String, String)
-        case elementInsideElement(String, String)
-        case elementParentOfElement(String, String)
-        case elementImmediatelyAfterElement(String, String)
-        case elementPrecededElements(String, String)
-    }
-    
-    struct CSSSelector {
-        let cssSelectorType: CSSSelectorType
-        let pseudoClass: String?
-        let pseudoElement: String?
-    }
-    
-    enum CSSPropertyValue {
-        case string(String)
-        case double(Double)
-        case int(Int)
-        case other(Any)
-    }
-    
-    enum HTMLElement: Hashable {
-        case body
-        case a
-        case p
-        case div
-        case h1
-        case h2
-        case h3
-        case h4
-        case h5
-        case h6
-        case head
-        case img
-        case other(String)
+    enum ElementType {
+        case textCss
         
-        init(from: String) {
+        init?(from: String) {
             switch from {
-            case "body": self = .body
-            case "a": self = .a
-            case "div": self = .div
-            case "p": self = .p
-            case "h1": self = .h1
-            case "h2": self = .h2
-            case "h3": self = .h3
-            case "h4": self = .h4
-            case "h5": self = .h5
-            case "h6": self = .h6
-            case "head": self = .head
-            case "img": self = .img
-            default: self = .other(from)
+            case "text/css":
+                self = .textCss
+            default:
+                return nil
             }
         }
     }
@@ -186,8 +148,9 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
     
     private var component: HTMLComponent?
     private var currentComponentDepthLevel = 0
+    private var stylesToUse: [CSSParser.Result] = []
+    
     private let cssParser = CSSParser()
-
     private var styles: [URL: CSSParser.Result] = [:]
     
     private var baseUrl: URL?
@@ -211,6 +174,7 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
         
         currentComponentDepthLevel = 0
         component = nil
+        stylesToUse = []
         
         parser.delegate = self
         parser.parse()
@@ -222,7 +186,7 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
             return nil
         }
         
-        let result = DocumentResult(elements: buildDocumentResult(from: component))
+        let result = DocumentResult(elements: buildDocumentResult(from: component, url: url))
         let d4 = Date()
 //        print("Time3 = \(d4.timeIntervalSince(d3))")
         return result
@@ -230,7 +194,7 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
     
     // MARK: - Logic
     
-    private func buildDocumentResult(from component: HTMLComponent, attributes: DocumentResult.Element.Attributes = .init()) -> [DocumentResult.Element] {
+    private func buildDocumentResult(from component: HTMLComponent, url: URL, attributes: DocumentResult.Element.Attributes = .init()) -> [DocumentResult.Element] {
         var newAttributes = attributes
         var result: [DocumentResult.Element] = []
         
@@ -242,17 +206,25 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
                 return []
             }
         case .element(let element):
-            switch element.name {
-            case .head:
-                loadResourcesFrom(head: component)
+            guard element.name != .head else {
+                loadResourcesFrom(headComponents: element.components, documentUrl: url)
                 return []
+            }
+            
+            if let width = element.attributes["width"], let widthValue = NumericValue(string: width) {
+                newAttributes.width = widthValue
+            }
+            if let height = element.attributes["height"], let heightValue = NumericValue(string: height) {
+                newAttributes.height = heightValue
+            }
+            
+            switch element.name {
             case .a:
                 newAttributes.link = .init(link: element.attributes["href"])
             case .div, .p:
                 result.append(.init(elementType: .text("\n\n"), attributes: newAttributes))
             case .h1, .h2, .h3, .h4, .h5, .h6:
-                var font = attributes.font ?? .init()
-                font.styles.insert(.bold)
+                newAttributes.font.traits.insert(.traitBold)
                 
                 let multiplier: CGFloat
                 switch element.name {
@@ -263,28 +235,74 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
                 case .h5: multiplier = 1.3
                 default: multiplier = 1.15
                 }
-                font.sizeMultiplier = multiplier
-                newAttributes.font = font
-                
+                newAttributes.font.sizeMultiplier = multiplier
 
                 result.append(.init(elementType: .text("\n\n"), attributes: newAttributes))
             case .img:
                 if let src = element.attributes["src"] {
-                    newAttributes.image = .init(alt: element.attributes["alt"], width: .init(string: element.attributes["width"]), heigth: .init(string: element.attributes["height"]))
+                    newAttributes.image = .init(alt: element.attributes["alt"])
                     result.append(.init(elementType: .image(src), attributes: newAttributes))
                 }
+            case .em:
+                newAttributes.font.traits.insert(.traitItalic)
+            case .br:
+                result.append(.init(elementType: .text("\n"), attributes: newAttributes))
             default:
                 break
             }
             
-            return result + element.components.flatMap { buildDocumentResult(from: $0, attributes: newAttributes)}
+            return result + element.components.flatMap { buildDocumentResult(from: $0, url: url, attributes: newAttributes)}
         }
     }
     
-    private func loadResourcesFrom(head: HTMLComponent) {
-        // TODO: Implement
+    private func loadResourcesFrom(headComponents: [HTMLComponent], documentUrl: URL) {
+        for component in headComponents {
+            guard case .element(let element) = component else {
+                continue
+            }
+            switch element.name {
+            case .link:
+                guard let rel = element.attributes["rel"],
+                      let href = element.attributes["href"],
+                      let typeString = element.attributes["type"],
+                      let type = ElementType(from: typeString) else {
+                    continue
+                }
+                switch rel {
+                case "stylesheet":
+                    guard type == .textCss else {
+                        continue
+                    }
+                    
+                    let fileUrl = documentUrl.deletingLastPathComponent().appendingPathComponent(href)
+                    
+                    if let style = loadStyle(from: fileUrl) {
+                        stylesToUse.append(style)
+                    }
+                default:
+                    print("\(rel) relationship is not handled")
+                    
+                }
+            default:
+                break
+            }
+        }
         
     }
+    
+    private func loadStyle(from url: URL) -> CSSParser.Result? {
+        guard styles[url] == nil else {
+            return styles[url]
+        }
+        
+        guard let cssResult = cssParser.parse(url: url) else {
+            return nil
+        }
+        
+        styles[url] = cssResult
+        return cssResult
+    }
+    
     
     // MARK: - XMLParserDelegate
     

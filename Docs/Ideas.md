@@ -10,7 +10,9 @@
 8. Ability to add some widgets on the screen (like clever translator, notes widget) and configure all of it.
 9. Add books names and authors to spotlight search on the phone.
 10. Create custom plugin system? Everybody can create and propose his owns plugin, and users can browse plugins shop.
-11. Add intergration with WaniKani
+11. Add intergration with WaniKani (read info about kanji)
+12. Add word counter for the book (this could be implemented in something like statistics screen).
+13. Additionaly reduce screen brightness.
 
 
 # Technical Questions

@@ -1,0 +1,36 @@
+p {
+	width: 50px;
+}
+
+.class1 {
+	width: 100px;
+}
+
+#id1 {
+	width: 150px;
+}
+
+body.class1 {  
+	width: 200px;
+}
+
+div.class1.class2 {
+	width: 250px;
+}
+
+.class3.class4.class5 {
+	width: 300px;
+}
+
+.class1.class2#id2 {
+	width: 350px;
+}
+
+a#id5 {
+	width: 400px;
+}
+
+div.class1.class3#someotherid {
+	width: 450px;
+}
+
