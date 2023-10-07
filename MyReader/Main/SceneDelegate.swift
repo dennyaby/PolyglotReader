@@ -22,11 +22,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = window
         
         window.makeKeyAndVisible()
-        do {
-            
-        } catch {
-            print("Cannot import books")
-        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

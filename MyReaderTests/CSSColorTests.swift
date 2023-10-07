@@ -160,6 +160,6 @@ final class CSSColorTests: XCTestCase {
                 rgba1.g - rgba2.g,
                 rgba1.b - rgba2.b,
                 rgba1.a - rgba2.a].map({ abs($0) }).contains(where: { $0 > 0.01 }) == false
-
+        
     }
 }

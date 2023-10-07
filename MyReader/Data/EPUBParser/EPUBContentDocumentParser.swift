@@ -10,46 +10,6 @@ import UIKit.UIColor
 
 final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
     
-    struct NumericValue {
-        
-        let points: CGFloat
-        
-        // let pixes: CGFloat
-        
-        // MARK: - Init
-        
-        init?(string: String?) {
-            guard let string = string, let doubleValue = Double(string) else {
-//                fatalError("Should handle as some value")
-                return nil
-            }
-            self.init(points: CGFloat(doubleValue))
-            // TODO: Handle all possible formats
-        }
-        
-        init(points: CGFloat) {
-            self.points = points
-        }
-        
-        // MARK: - Operators
-        
-        static func *(lhs: NumericValue, rhs: NumericValue) -> NumericValue {
-            return .init(points: lhs.points * rhs.points)
-        }
-        
-        static func *(lhs: NumericValue, rhs: CGFloat) -> NumericValue {
-            return .init(points: lhs.points * rhs)
-        }
-        
-        static func /(lhs: NumericValue, rhs: NumericValue) -> NumericValue {
-            return .init(points: lhs.points / rhs.points)
-        }
-        
-        static func /(lhs: NumericValue, rhs: CGFloat) -> NumericValue {
-            return .init(points: lhs.points / rhs)
-        }
-    }
-    
     struct DocumentResult {
         struct Element {
             struct Attributes {
@@ -75,8 +35,9 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
                 var font = Font()
                 var image = Image()
                 var link = Link()
-                var width: NumericValue?
-                var height: NumericValue?
+                var width: CSSNumericValue?
+                var height: CSSNumericValue?
+                var textAlign: NSTextAlignment = .left
             }
             
             enum ElementType {
@@ -160,16 +121,10 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
     // Version 1: Just text, dont think about images at all. It will be faster to implement this way and then rebuild, because I will spend more time coding and actually understanding then reading.
     
     func parse(url: URL) -> DocumentResult? {
-        let d1 = Date()
         guard let parser = XMLParser(contentsOf: url) else {
             return nil
         }
-        let d2 = Date()
-        let t1 = d2.timeIntervalSince(d1)
-        if t1 > 0.05 {
-//            print("t1 = \(t1)")
-        }
-        
+
         baseUrl = url.deletingLastPathComponent()
         
         currentComponentDepthLevel = 0
@@ -179,16 +134,11 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
         parser.delegate = self
         parser.parse()
         
-        let d3 = Date()
-//        print("Time2 = \(d3.timeIntervalSince(d2))")
-        
         guard let component = component else {
             return nil
         }
         
         let result = DocumentResult(elements: buildDocumentResult(from: component, url: url))
-        let d4 = Date()
-//        print("Time3 = \(d4.timeIntervalSince(d3))")
         return result
     }
     
@@ -211,13 +161,16 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
                 return []
             }
             
-            if let width = element.attributes["width"], let widthValue = NumericValue(string: width) {
+            if let width = element.attributes["width"], let widthValue = CSSNumericValue(string: width) {
                 newAttributes.width = widthValue
             }
-            if let height = element.attributes["height"], let heightValue = NumericValue(string: height) {
+            if let height = element.attributes["height"], let heightValue = CSSNumericValue(string: height) {
                 newAttributes.height = heightValue
             }
             
+            for style in stylesToUse {
+                newAttributes = apply(css: style, to: element, currentAttributes: newAttributes)
+            }
             switch element.name {
             case .a:
                 newAttributes.link = .init(link: element.attributes["href"])
@@ -236,7 +189,7 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
                 default: multiplier = 1.15
                 }
                 newAttributes.font.sizeMultiplier = multiplier
-
+                
                 result.append(.init(elementType: .text("\n\n"), attributes: newAttributes))
             case .img:
                 if let src = element.attributes["src"] {
@@ -253,6 +206,33 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
             
             return result + element.components.flatMap { buildDocumentResult(from: $0, url: url, attributes: newAttributes)}
         }
+    }
+    
+    private func apply(css: CSSParser.Result, to element: HTMLComponent.Element, currentAttributes: DocumentResult.Element.Attributes) -> DocumentResult.Element.Attributes {
+        var result = currentAttributes
+        
+        let classes = Set((element.attributes["class"] ?? "").components(separatedBy: " ").map({ String($0) }))
+        let properties = css.match(element: element.name, classes: classes, id: element.attributes["id"])
+        for (key, value) in properties {
+            switch key {
+            case .textAlign:
+                guard let textAlign = CSSTextAlign(from: value) else { continue }
+                result.textAlign = textAlign.textAlign
+            case .color:
+                guard let color = CSSColor(from: value) else { continue }
+                result.textColor = color.uiColor
+            case .width:
+                guard let width = CSSNumericValue(string: value) else { continue }
+                result.width = width
+            case .height:
+                guard let height = CSSNumericValue(string: value) else { continue }
+                result.height = height
+            default:
+                break
+            }
+        }
+        
+        return result
     }
     
     private func loadResourcesFrom(headComponents: [HTMLComponent], documentUrl: URL) {

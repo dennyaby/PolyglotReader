@@ -21,7 +21,7 @@ extension DateFormatter {
             return existing
         }
         
-        var new = DateFormatter()
+        let new = DateFormatter()
         new.dateFormat = format
         new.timeZone = timeZone
         new.locale = locale

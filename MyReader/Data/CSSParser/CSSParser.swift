@@ -6,10 +6,6 @@
 //
 
 import Foundation
-/*
- Give every selector hash value with some logic - for example plain is "element.class#id". When one after another - "element1\nelement2. Then from html construct all possible combinations of selector and try to get values from selectors hash table.
- 
- */
 
 final class CSSParser {
     
@@ -72,7 +68,6 @@ final class CSSParser {
         guard let fileString = String(data: data, encoding: .utf8) else {
             return nil
         }
-//        print(fileString)
         
         return parse(string: fileString)
     }
@@ -85,7 +80,7 @@ final class CSSParser {
         
         let range = NSRange(string.startIndex..<string.endIndex, in: string)
         
-        var selectors: [CSSSelector: [CSSProperty: String]] = [:]
+        var selectors: [CSSSelector: Properties] = [:]
         
         selectorRegExp.enumerateMatches(in: string, options: [], range: range) { match, _, stop in
             guard let match = match else { return }
@@ -105,46 +100,9 @@ final class CSSParser {
         return Result(css: buildCSSTree(from: selectors))
     }
     
-    /*
-     
-     <p class="class1 class2" id="myid">
-     
-     * {
-        font-color: brown;
-     }
-     
-     p { color = white; }
-     
-     .class1 {
-        color = red;
-     }
-     
-     p.class2 {
-        background-color: blue;
-     }
-     
-     p.class1#myid {
-        text-align: center;
-        color = black;
-     }
-     
-     css[.p] = [.any: [.any: [color = white],
-                       .classes("class2"): [background-color: blue],
-                .id(myid): [.classes("class1"): [text-align: center; color = black;]
-     
-     
-     css[.any] = [.any: [.classes("class1"): [color: red]]
-     
-     
-     css[.p][.any][.any] + css[.any][.any][.classes(class1, class2)] + css[
-     
-     // When adding info from selectors to classes, for example we have .c1, .c2 and .c1.c2 - We add properties from .c1 to [.classes(c1)], properties from .c2 to [.classes(c2)], and properties from .c1, .c2 and .c1.c2 to [.classes(c1, c2)]
-     
-     */
-    
     // MARK: - Helper
     
-    private func buildCSSTree(from selectors: [CSSSelector: [CSSProperty: String]]) -> Result.CSSTree {
+    private func buildCSSTree(from selectors: [CSSSelector: Properties]) -> Result.CSSTree {
         var result: Result.CSSTree = [:]
         
         for (selector, properties) in selectors {
@@ -178,7 +136,10 @@ final class CSSParser {
     }
     
     private func selector(from string: String) -> CSSSelector {
-        // TODO: Handle * selector
+        if string.trimmingCharacters(in: .whitespacesAndNewlines) == "*" {
+            return .init(element: nil, classes: [], id: nil)
+        }
+        
         var element: HTMLElement?
         var classes: Set<String> = []
         var id: String?
@@ -205,8 +166,8 @@ final class CSSParser {
         return CSSSelector(element: element, classes: classes, id: id)
     }
     
-    private func bodyValues(from string: String, regex: NSRegularExpression) -> [CSSProperty: String] {
-        var result: [CSSProperty: String] = [:]
+    private func bodyValues(from string: String, regex: NSRegularExpression) -> Properties {
+        var result: Properties = [:]
         
         let range = NSRange(string.startIndex..<string.endIndex, in: string)
         regex.enumerateMatches(in: string, range: range) { match, _, stop in
@@ -216,8 +177,9 @@ final class CSSParser {
             guard let propertyRange = Range(match.range(at: 1), in: string) else { return }
             guard let valueRange = Range(match.range(at: 2), in: string) else { return }
             
-            guard let property = CSSProperty(rawValue: String(string[propertyRange])) else {
-                print("Cannot handle css property \(String(string[propertyRange]))")
+            let propertyName = String(string[propertyRange]).lowercased()
+            guard let property = CSSProperty(rawValue: propertyName) else {
+                print("Cannot handle css property \(propertyName)")
                 return
             }
             result[property] = String(string[valueRange])

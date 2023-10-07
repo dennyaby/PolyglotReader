@@ -40,7 +40,7 @@ class EPUBDataProvider: Loggable {
     
     private enum ImageSize {
         case ratio(CGFloat)
-        case fixed(EPUBContentDocumentParser.NumericValue, EPUBContentDocumentParser.NumericValue)
+        case fixed(CSSNumericValue, CSSNumericValue)
     }
     
     private struct CoreTextRunInfo {
@@ -77,9 +77,7 @@ class EPUBDataProvider: Loggable {
                 return nil
             }
             let bookContentUrl = try appManager.fileManager.getBookContentDirectory(bookId: bookId)
-            let start = Date()
             let parseResult = try EPUBParser().parse(url: bookContentUrl)
-//            print("Time book parse = \(Date().timeIntervalSince(start))")
             
             self.appManager = appManager
             self.book = book
@@ -156,6 +154,7 @@ class EPUBDataProvider: Loggable {
                 
                 attributes[.font] = font
                 attributes[.foregroundColor] = element.attributes.textColor ?? Self.textColor
+                attributes[.paragraphStyle] = paragraphStyle(for: element.attributes)
                 resultString.append(NSAttributedString(string: text,attributes: attributes))
             case .image(let src):
                 guard let imageUrl = getUrl(from: src, documentURL: document.url) else { continue }
@@ -176,12 +175,15 @@ class EPUBDataProvider: Loggable {
                 case .fixed(let imageWidth, let imageHeight):
                     var scaleBy: CGFloat = 1
                     
-                    if imageWidth.points > pageSize.width || imageHeight.points > pageSize.height {
-                        scaleBy = min(pageSize.width / imageWidth.points, pageSize.height / imageHeight.points)
+                    let widthInPoints = imageWidth.pointSize(with: Self.fontSize)
+                    let heightInPoints = imageHeight.pointSize(with: Self.fontSize)
+                    
+                    if widthInPoints > pageSize.width || heightInPoints > pageSize.height {
+                        scaleBy = min(pageSize.width / widthInPoints, pageSize.height / heightInPoints)
                     }
                     
-                    width = imageWidth.points * scaleBy
-                    height = imageWidth.points * scaleBy
+                    width = widthInPoints * scaleBy
+                    height = heightInPoints
                 }
                 
                 let extentBuffer = UnsafeMutablePointer<CoreTextRunInfo>.allocate(capacity: 1)
@@ -244,6 +246,12 @@ class EPUBDataProvider: Loggable {
         }
         imageSizes[url] = imageSize
         return imageSize
+    }
+    
+    private func paragraphStyle(for attributes: EPUBContentDocumentParser.DocumentResult.Element.Attributes) -> NSParagraphStyle? {
+        let ps = NSMutableParagraphStyle()
+        ps.alignment = attributes.textAlign
+        return ps
     }
     
     // MARK: - URLs

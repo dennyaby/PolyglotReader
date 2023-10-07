@@ -108,8 +108,7 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
     }
     
     // MARK: - Book Layout
-    static var a = 1
-    static var b = 1
+    
     private func reloadBookLayout(from content: [EPUBDataProvider.Result]) {
         let start = Date()
         self.pagesFrames = []
@@ -124,21 +123,11 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
             
             let framesetter = CTFramesetterCreateWithAttributedString(documentInfo.attributedString as CFAttributedString)
             
-            Self.a += 1
-            print("A = \(Self.a)")
-            
-            if Self.a == 11 {
-                print()
-            }
             var textPosition = 0
             while textPosition < documentInfo.attributedString.length {
                 let path = CGMutablePath()
                 path.addRect(CGRect(origin: .zero, size: pageSize))
                 
-                if Self.a == 12 {
-                    print("B = \(Self.b)")
-                    Self.b += 1
-                }
                 let ctframe = CTFramesetterCreateFrame(framesetter, CFRangeMake(textPosition, 0), path, nil)
                 
                 let frameRange = CTFrameGetVisibleStringRange(ctframe)
