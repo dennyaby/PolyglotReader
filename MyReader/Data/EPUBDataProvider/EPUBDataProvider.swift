@@ -7,31 +7,193 @@
 
 import Foundation
 import UIKit.UIColor
+import UIKit
 
-class EPUBDataProvider: Loggable {
+struct EPUBDataProviderConfig {
+    let fontSize: CGFloat
+    let textColor: UIColor
     
-    static let textColor = UIColor.black
-    static let fontSize: CGFloat = 20
+    static let standard = EPUBDataProviderConfig(fontSize: 20, textColor: .black)
+}
+
+struct EPUBDataProviderUserSettings {
+    let fontMultiplier: CGFloat
+}
+
+struct EPUBDataProviderResult {
+    let attributedString: NSAttributedString
+    let images: [EPUBDataProvderImageInfo]
+}
+
+struct EPUBDataProvderImageInfo {
+    let width: CGFloat
+    let height: CGFloat
+    let location: Int
+    let url: URL
+}
+
+protocol EPUBDataProvider {
+    
+    init?(appManager: AppManager, book: Book, config: EPUBDataProviderConfig)
+    
+    func bookContents(userTextSettings: EPUBDataProviderUserSettings, pageSize: CGSize) -> [EPUBDataProviderResult]
+    func image(for url: URL) -> UIImage?
+}
+
+class EPUBDataProviderAutoParse: Loggable, EPUBDataProvider {
+    
+    // MARK: - Properties
+    
+    private let config: EPUBDataProviderConfig
+    private let appManager: AppManager
+    private let book: Book
+    private let bookContentURL: URL
+    private let baseBookURL: URL
+    private let bookParseResult: EPUBParser.Result
+    
+    private var spineItems: [EPUBParser.SpineItem] {
+        return bookParseResult.opfContainerParserResult.spineItems
+    }
+    private var manifestItems: [String: EPUBParser.ManifestItem] {
+        return bookParseResult.opfContainerParserResult.manifestItems
+    }
+    
+    static let linksRegExp: NSRegularExpression? = {
+        return try? NSRegularExpression(pattern: "<link[^>]*\\/>")
+    }()
+    
+    static let hrefRegExp: NSRegularExpression? = {
+        return try? NSRegularExpression(pattern: "href=\"([^\"]*)\"")
+    }()
+    
+    static let typeRegExp: NSRegularExpression? = {
+        return try? NSRegularExpression(pattern: "type=\"([^\"]*)\"")
+    }()
+    
+    static let relRegExp: NSRegularExpression? = {
+        return try? NSRegularExpression(pattern: "rel=\"([^\"]*)\"")
+    }()
+    
+    // MARK: - Init
+    
+    required init?(appManager: AppManager, book: Book, config: EPUBDataProviderConfig = .standard) {
+        do {
+            guard let bookId = book.bookId else {
+                return nil
+            }
+            let bookContentUrl = try appManager.fileManager.getBookContentDirectory(bookId: bookId)
+            
+            let parseResult = try EPUBParser().parse(url: bookContentUrl)
+            
+            self.appManager = appManager
+            self.book = book
+            self.bookContentURL = bookContentUrl
+            self.bookParseResult = parseResult
+            
+            let basePath = parseResult.xmlContainerParserResult.packageBasePath
+            if basePath == "" {
+                self.baseBookURL = self.bookContentURL
+            } else {
+                self.baseBookURL = self.bookContentURL.appendingPathComponent(basePath)
+            }
+            self.config = config
+        } catch {
+            return nil
+        }
+    }
+    
+    // MARK: - Interface
+    
+    func bookContents(userTextSettings: EPUBDataProviderUserSettings, pageSize: CGSize) -> [EPUBDataProviderResult] {
+        var strings: [NSAttributedString] = []
+        var cssFiles: [URL: String] = [:]
+        
+        for spineItem in spineItems {
+            if let manifest = manifestItems[spineItem.idref] {
+                switch manifest.mediaType {
+                case .htmlXml:
+                    let url = baseBookURL.appendingPathComponent(manifest.href)
+                    
+                    do {
+                        let data = try Data(contentsOf: url)
+                        guard var string = String(data: data, encoding: .utf8) else { continue }
+                        
+                        if let linksRegExp = Self.linksRegExp, let relRegExp = Self.relRegExp, let typeRegExp = Self.typeRegExp, let hrefRegExp = Self.hrefRegExp {
+                            
+                            let range = NSRange(string.startIndex..<string.endIndex, in: string)
+                            let matches = linksRegExp.matches(in: string, range: range)
+                            let ranges = matches.compactMap { match in
+                                return Range.init(match.range(at: 0), in: string)
+                            }.reversed()
+                            
+                            for range in ranges {
+                                let linkString = String(string[range])
+                                let linkStringRange = NSRange(linkString.startIndex..<linkString.endIndex, in: linkString)
+                                
+                                if let relMatch = relRegExp.firstMatch(in: linkString, range: linkStringRange),
+                                   relMatch.numberOfRanges >= 2,
+                                   let relValueRange = Range(relMatch.range(at: 1), in: linkString),
+                                   linkString[relValueRange] == "stylesheet" {
+                                    if let typeMatch = typeRegExp.firstMatch(in: linkString, range: linkStringRange),
+                                       typeMatch.numberOfRanges >= 2,
+                                       let typeValueRange = Range(typeMatch.range(at: 1), in: linkString),
+                                       linkString[typeValueRange] == "text/css" {
+                                        if let hrefMatch = hrefRegExp.firstMatch(in: linkString, range: linkStringRange),
+                                           hrefMatch.numberOfRanges >= 2,
+                                           let hrefValueRange = Range(hrefMatch.range(at: 1), in: linkString) {
+                                            let href = String(linkString[hrefValueRange])
+                                            
+                                            let cssFileUrl = url.deletingLastPathComponent().appendingPathComponent(href)
+                                            
+                                            var cssFile: String?
+                                            if let existing = cssFiles[cssFileUrl] {
+                                                cssFile = existing
+                                            } else if let data = try? Data(contentsOf: cssFileUrl),
+                                                      let cssString = String(data: data, encoding: .utf8){
+                                                cssFile = cssString
+                                                cssFiles[cssFileUrl] = cssString
+                                            }
+                                            
+                                            if let cssFile = cssFile {
+                                                string.replaceSubrange(range, with: "<style>\n\(cssFile)\n</style>")
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            
+                        }
+                        
+                        guard let data = string.data(using: .utf8) else {
+                            continue
+                        }
+                        
+                        
+                        let attributedString = try NSAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil)
+                        strings.append(attributedString)
+                    } catch {
+                        print("Error constructing attributed string: \(error)")
+                    }
+                default:
+                    break
+                }
+            }
+        }
+        return strings.map { .init(attributedString: $0, images: [])}
+    }
+    
+    func image(for url: URL) -> UIImage? {
+        return nil
+    }
+    
+    // MARK: - Logic
+}
+
+class EPUBDataProviderManualParse: Loggable, EPUBDataProvider {
     
     typealias Content = EPUBContentDocumentParser.DocumentResult
     
     // MARK: - Nested Types
-    
-    struct UserTextSettings {
-        let fontMultiplier: CGFloat
-    }
-    
-    struct Result {
-        let attributedString: NSAttributedString
-        let images: [ImageInfo]
-    }
-    
-    struct ImageInfo {
-        let width: CGFloat
-        let height: CGFloat
-        let location: Int
-        let url: URL
-    }
     
     private struct Document {
         let url: URL
@@ -51,6 +213,7 @@ class EPUBDataProvider: Loggable {
     
     // MARK: - Properties
     
+    private let config: EPUBDataProviderConfig
     private let book: Book
     private let appManager: AppManager
     private let bookContentURL: URL
@@ -71,7 +234,7 @@ class EPUBDataProvider: Loggable {
     
     // MARK: - Init
     
-    init?(appManager: AppManager, book: Book) {
+    required init?(appManager: AppManager, book: Book, config: EPUBDataProviderConfig = .standard) {
         do {
             guard let bookId = book.bookId else {
                 return nil
@@ -90,6 +253,7 @@ class EPUBDataProvider: Loggable {
             } else {
                 self.baseBookURL = self.bookContentURL.appendingPathComponent(basePath)
             }
+            self.config = config
         } catch {
             return nil
         }
@@ -97,7 +261,7 @@ class EPUBDataProvider: Loggable {
     
     // MARK: - Interface
     
-    func bookContents(userTextSettings: UserTextSettings, pageSize: CGSize) -> [Result] {
+    func bookContents(userTextSettings: EPUBDataProviderUserSettings, pageSize: CGSize) -> [EPUBDataProviderResult] {
         return parseBookContentIfNeeded().map({ mapDocumentToResult($0, userSettings: userTextSettings, pageSize: pageSize)})
     }
     
@@ -138,10 +302,10 @@ class EPUBDataProvider: Loggable {
         return documents
     }
     
-    private func mapDocumentToResult(_ document: Document, userSettings: UserTextSettings, pageSize: CGSize) -> Result {
+    private func mapDocumentToResult(_ document: Document, userSettings: EPUBDataProviderUserSettings, pageSize: CGSize) -> EPUBDataProviderResult {
         // TODO: Apply settings
         let resultString = NSMutableAttributedString()
-        var images: [ImageInfo] = []
+        var images: [EPUBDataProvderImageInfo] = []
         
         for element in document.content.elements {
             switch element.elementType {
@@ -149,11 +313,11 @@ class EPUBDataProvider: Loggable {
                 var attributes: [NSAttributedString.Key: Any] = [:]
                 
                 let fontInfo = element.attributes.font
-                let size = Self.fontSize * fontInfo.sizeMultiplier
+                let size = config.fontSize * fontInfo.sizeMultiplier
                 let font = UIFont.systemFont(ofSize: size).with(traits: fontInfo.traits)
                 
                 attributes[.font] = font
-                attributes[.foregroundColor] = element.attributes.textColor ?? Self.textColor
+                attributes[.foregroundColor] = element.attributes.textColor ?? config.textColor
                 attributes[.paragraphStyle] = paragraphStyle(for: element.attributes)
                 resultString.append(NSAttributedString(string: text,attributes: attributes))
             case .image(let src):
@@ -175,8 +339,8 @@ class EPUBDataProvider: Loggable {
                 case .fixed(let imageWidth, let imageHeight):
                     var scaleBy: CGFloat = 1
                     
-                    let widthInPoints = imageWidth.pointSize(with: Self.fontSize)
-                    let heightInPoints = imageHeight.pointSize(with: Self.fontSize)
+                    let widthInPoints = imageWidth.pointSize(with: config.fontSize)
+                    let heightInPoints = imageHeight.pointSize(with: config.fontSize)
                     
                     if widthInPoints > pageSize.width || heightInPoints > pageSize.height {
                         scaleBy = min(pageSize.width / widthInPoints, pageSize.height / heightInPoints)

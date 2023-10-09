@@ -55,7 +55,7 @@ enum CSSNumericValue: Hashable {
     func pointSize(with fontSize: CGFloat) -> CGFloat {
         switch self {
         case .pt(let pt): return pt
-        case .px(let px): return px / UIScreen.main.scale // TODO: Check if it is safe to call it from background thread
+        case .px(let px): return px
         case .em(let em): return fontSize * em
         }
     }

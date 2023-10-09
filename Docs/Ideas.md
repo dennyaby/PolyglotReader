@@ -13,6 +13,7 @@
 11. Add intergration with WaniKani (read info about kanji)
 12. Add word counter for the book (this could be implemented in something like statistics screen).
 13. Additionaly reduce screen brightness.
+14. Add ability to read internet articles (like read mode in Safari). With ability to download page, translate text and add to Anki.
 
 
 # Technical Questions

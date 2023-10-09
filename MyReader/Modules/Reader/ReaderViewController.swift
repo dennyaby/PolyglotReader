@@ -41,7 +41,7 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
     // MARK: - Init
     
     init?(appManager: AppManager, book: Book) {
-        guard let epubDataProvider = EPUBDataProvider(appManager: appManager, book: book) else {
+        guard let epubDataProvider = EPUBDataProviderAutoParse(appManager: appManager, book: book) else {
             return nil
         }
         self.epubDataProvider = epubDataProvider
@@ -109,7 +109,7 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
     
     // MARK: - Book Layout
     
-    private func reloadBookLayout(from content: [EPUBDataProvider.Result]) {
+    private func reloadBookLayout(from content: [EPUBDataProviderResult]) {
         let start = Date()
         self.pagesFrames = []
         self.attributedTexts = []
