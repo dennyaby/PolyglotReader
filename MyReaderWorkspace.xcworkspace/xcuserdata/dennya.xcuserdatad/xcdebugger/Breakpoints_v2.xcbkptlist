@@ -7,22 +7,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "CBCCBC6F-F787-4965-BC17-42553728CFAC"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MyReader/Data/EPUBDataProvider/EPUBDataProvider.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "373"
-            endingLineNumber = "373"
-            landmarkName = "mapDocumentToResult(_:userSettings:pageSize:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "2D6B87E2-5F2E-4C08-A8DE-1DE59182B13A"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -34,69 +18,6 @@
             endingLineNumber = "69"
             landmarkName = "viewDidLayoutSubviews()"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "6C1053E9-DECA-4EE3-9712-853CBAC924BD"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MyReader/Data/EPUBDataProvider/EPUBDataProvider.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "324"
-            endingLineNumber = "324"
-            landmarkName = "mapDocumentToResult(_:userSettings:pageSize:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "6C1053E9-DECA-4EE3-9712-853CBAC924BD - a473f61b79a83460"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MyReader.EPUBDataProvider.mapDocumentToResult(_: MyReader.EPUBDataProvider.Document, userSettings: MyReader.EPUBDataProvider.UserTextSettings, pageSize: __C.CGSize) -&gt; MyReader.EPUBDataProvider.Result"
-                  moduleName = "MyReader"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dennya/Documents/Code/Projects/MyReader/MyReader/Data/EPUBDataProvider/EPUBDataProvider.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "172"
-                  endingLineNumber = "172"
-                  offsetFromSymbolStart = "2320">
-               </Location>
-               <Location
-                  uuid = "6C1053E9-DECA-4EE3-9712-853CBAC924BD - a473f61b79a83460"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MyReader.EPUBDataProvider.mapDocumentToResult(_: MyReader.EPUBDataProvider.Document, userSettings: MyReader.EPUBDataProvider.UserTextSettings, pageSize: __C.CGSize) -&gt; MyReader.EPUBDataProvider.Result"
-                  moduleName = "MyReader"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dennya/Documents/Code/Projects/MyReader/MyReader/Data/EPUBDataProvider/EPUBDataProvider.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "172"
-                  endingLineNumber = "172"
-                  offsetFromSymbolStart = "2432">
-               </Location>
-               <Location
-                  uuid = "6C1053E9-DECA-4EE3-9712-853CBAC924BD - a473f61b79a83460"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MyReader.EPUBDataProvider.mapDocumentToResult(_: MyReader.EPUBDataProvider.Document, userSettings: MyReader.EPUBDataProvider.UserTextSettings, pageSize: __C.CGSize) -&gt; MyReader.EPUBDataProvider.Result"
-                  moduleName = "MyReader"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dennya/Documents/Code/Projects/MyReader/MyReader/Data/EPUBDataProvider/EPUBDataProvider.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "172"
-                  endingLineNumber = "172"
-                  offsetFromSymbolStart = "3844">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -118,16 +39,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "6A52AFE7-2DC1-4B91-9F5A-47ABD6210E92"
+            uuid = "B1D40B9D-E07E-4489-A2C4-EF1500BBB182"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "MyReader/Data/EPUBDataProvider/EPUBDataProvider.swift"
+            filePath = "MyReader/Data/EPUBParser/EPUBContentDocumentParser.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "172"
-            endingLineNumber = "172"
-            landmarkName = "bookContents(userTextSettings:pageSize:)"
+            startingLineNumber = "36"
+            endingLineNumber = "36"
+            landmarkName = "parse(url:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

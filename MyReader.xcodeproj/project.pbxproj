@@ -10,7 +10,6 @@
 		B01D7AE12AAA814C00677F29 /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01D7AE02AAA814C00677F29 /* ButtonStyle.swift */; };
 		B01D7AE32AABB40500677F29 /* ColorStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01D7AE22AABB40500677F29 /* ColorStyle.swift */; };
 		B01D7AE52AABBF5000677F29 /* BookImportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01D7AE42AABBF5000677F29 /* BookImportManager.swift */; };
-		B01D7AE82AABC7FF00677F29 /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = B01D7AE72AABC7FF00677F29 /* Zip */; };
 		B01D7AEA2AABCB7600677F29 /* EPUBParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01D7AE92AABCB7600677F29 /* EPUBParser.swift */; };
 		B01D7AED2AABCC6600677F29 /* book.epub in Resources */ = {isa = PBXBuildFile; fileRef = B01D7AEC2AABCC6600677F29 /* book.epub */; };
 		B01D7AFC2AAFC53C00677F29 /* SharedDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01D7AFB2AAFC53C00677F29 /* SharedDateFormatter.swift */; };
@@ -33,6 +32,10 @@
 		B01D7B6C2ABE209300677F29 /* ReaderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01D7B6B2ABE209300677F29 /* ReaderCollectionViewCell.swift */; };
 		B01D7B6E2ABE20D200677F29 /* ReaderCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01D7B6D2ABE20D200677F29 /* ReaderCollectionView.swift */; };
 		B01D7B752ABF8D0C00677F29 /* CSSParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01D7B742ABF8D0C00677F29 /* CSSParser.swift */; };
+		B0317FF22AD9540500613D63 /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = B0317FF12AD9540500613D63 /* Zip */; };
+		B05861842AD4A38600800359 /* base.css in Resources */ = {isa = PBXBuildFile; fileRef = B05861832AD4A38600800359 /* base.css */; };
+		B05861862AD4A43B00800359 /* CSSFontStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05861852AD4A43B00800359 /* CSSFontStyle.swift */; };
+		B05861882AD4A52900800359 /* CSSFontWeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05861872AD4A52900800359 /* CSSFontWeight.swift */; };
 		B07780D12AA68F1000A53EF8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07780D02AA68F1000A53EF8 /* AppDelegate.swift */; };
 		B07780D32AA68F1000A53EF8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07780D22AA68F1000A53EF8 /* SceneDelegate.swift */; };
 		B07780DB2AA68F1000A53EF8 /* MyReader.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B07780D92AA68F1000A53EF8 /* MyReader.xcdatamodeld */; };
@@ -65,6 +68,23 @@
 		B0C59D912AD1FC7D001525B4 /* CSSTextAlignTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C59D902AD1FC7D001525B4 /* CSSTextAlignTests.swift */; };
 		B0C59D932AD2020D001525B4 /* CSSNumericValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C59D922AD2020D001525B4 /* CSSNumericValue.swift */; };
 		B0C59D952AD208E9001525B4 /* CSSNumericValueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C59D942AD208E9001525B4 /* CSSNumericValueTests.swift */; };
+		B0CB33892AD49B9B00DD5BE0 /* EPUBDataProviderAutoParse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0CB33882AD49B9B00DD5BE0 /* EPUBDataProviderAutoParse.swift */; };
+		B0CB338B2AD49BB500DD5BE0 /* EPUBDataProviderManualParse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0CB338A2AD49BB500DD5BE0 /* EPUBDataProviderManualParse.swift */; };
+		B0CB338D2AD49BF300DD5BE0 /* UIFontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0CB338C2AD49BF300DD5BE0 /* UIFontExtensions.swift */; };
+		B0CB33912AD49DEC00DD5BE0 /* HTMLComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0CB33902AD49DEC00DD5BE0 /* HTMLComponent.swift */; };
+		B0CB33932AD49E3B00DD5BE0 /* EPUBContentDocumentParserResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0CB33922AD49E3B00DD5BE0 /* EPUBContentDocumentParserResult.swift */; };
+		B0CB33952AD49E7C00DD5BE0 /* HTMLElementType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0CB33942AD49E7C00DD5BE0 /* HTMLElementType.swift */; };
+		B0CB33972AD49EAD00DD5BE0 /* HTMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0CB33962AD49EAD00DD5BE0 /* HTMLParser.swift */; };
+		B0FB21382AD5FEEC0086DEC1 /* CSSFontFamily.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FB21372AD5FEEC0086DEC1 /* CSSFontFamily.swift */; };
+		B0FB213B2AD600480086DEC1 /* CSSGlobalValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FB213A2AD600480086DEC1 /* CSSGlobalValue.swift */; };
+		B0FB213D2AD6008D0086DEC1 /* CSSGlobalValueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FB213C2AD6008D0086DEC1 /* CSSGlobalValueTests.swift */; };
+		B0FB213F2AD602880086DEC1 /* CSSFontFamilyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FB213E2AD602880086DEC1 /* CSSFontFamilyTests.swift */; };
+		B0FB21412AD605930086DEC1 /* CSSFontWeightTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FB21402AD605930086DEC1 /* CSSFontWeightTests.swift */; };
+		B0FB21432AD606E40086DEC1 /* CSSFontSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FB21422AD606E40086DEC1 /* CSSFontSize.swift */; };
+		B0FB21452AD72F070086DEC1 /* CSSFontStyleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FB21442AD72F070086DEC1 /* CSSFontStyleTests.swift */; };
+		B0FB21472AD72F220086DEC1 /* CSSFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FB21462AD72F220086DEC1 /* CSSFont.swift */; };
+		B0FB214A2AD731CE0086DEC1 /* CSSFontSizeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FB21492AD731CE0086DEC1 /* CSSFontSizeTests.swift */; };
+		B0FB214C2AD74D240086DEC1 /* CSSFontTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FB214B2AD74D240086DEC1 /* CSSFontTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -111,6 +131,9 @@
 		B01D7B6B2ABE209300677F29 /* ReaderCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderCollectionViewCell.swift; sourceTree = "<group>"; };
 		B01D7B6D2ABE20D200677F29 /* ReaderCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderCollectionView.swift; sourceTree = "<group>"; };
 		B01D7B742ABF8D0C00677F29 /* CSSParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSParser.swift; sourceTree = "<group>"; };
+		B05861832AD4A38600800359 /* base.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = base.css; sourceTree = "<group>"; };
+		B05861852AD4A43B00800359 /* CSSFontStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSFontStyle.swift; sourceTree = "<group>"; };
+		B05861872AD4A52900800359 /* CSSFontWeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSFontWeight.swift; sourceTree = "<group>"; };
 		B07780CD2AA68F1000A53EF8 /* MyReader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B07780D02AA68F1000A53EF8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B07780D22AA68F1000A53EF8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -148,6 +171,23 @@
 		B0C59D902AD1FC7D001525B4 /* CSSTextAlignTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CSSTextAlignTests.swift; path = MyReaderTests/CSSTextAlignTests.swift; sourceTree = SOURCE_ROOT; };
 		B0C59D922AD2020D001525B4 /* CSSNumericValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSNumericValue.swift; sourceTree = "<group>"; };
 		B0C59D942AD208E9001525B4 /* CSSNumericValueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSNumericValueTests.swift; sourceTree = "<group>"; };
+		B0CB33882AD49B9B00DD5BE0 /* EPUBDataProviderAutoParse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPUBDataProviderAutoParse.swift; sourceTree = "<group>"; };
+		B0CB338A2AD49BB500DD5BE0 /* EPUBDataProviderManualParse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPUBDataProviderManualParse.swift; sourceTree = "<group>"; };
+		B0CB338C2AD49BF300DD5BE0 /* UIFontExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFontExtensions.swift; sourceTree = "<group>"; };
+		B0CB33902AD49DEC00DD5BE0 /* HTMLComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLComponent.swift; sourceTree = "<group>"; };
+		B0CB33922AD49E3B00DD5BE0 /* EPUBContentDocumentParserResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPUBContentDocumentParserResult.swift; sourceTree = "<group>"; };
+		B0CB33942AD49E7C00DD5BE0 /* HTMLElementType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLElementType.swift; sourceTree = "<group>"; };
+		B0CB33962AD49EAD00DD5BE0 /* HTMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLParser.swift; sourceTree = "<group>"; };
+		B0FB21372AD5FEEC0086DEC1 /* CSSFontFamily.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSFontFamily.swift; sourceTree = "<group>"; };
+		B0FB213A2AD600480086DEC1 /* CSSGlobalValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSGlobalValue.swift; sourceTree = "<group>"; };
+		B0FB213C2AD6008D0086DEC1 /* CSSGlobalValueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSGlobalValueTests.swift; sourceTree = "<group>"; };
+		B0FB213E2AD602880086DEC1 /* CSSFontFamilyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSFontFamilyTests.swift; sourceTree = "<group>"; };
+		B0FB21402AD605930086DEC1 /* CSSFontWeightTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSFontWeightTests.swift; sourceTree = "<group>"; };
+		B0FB21422AD606E40086DEC1 /* CSSFontSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSFontSize.swift; sourceTree = "<group>"; };
+		B0FB21442AD72F070086DEC1 /* CSSFontStyleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSFontStyleTests.swift; sourceTree = "<group>"; };
+		B0FB21462AD72F220086DEC1 /* CSSFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSFont.swift; sourceTree = "<group>"; };
+		B0FB21492AD731CE0086DEC1 /* CSSFontSizeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSFontSizeTests.swift; sourceTree = "<group>"; };
+		B0FB214B2AD74D240086DEC1 /* CSSFontTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSFontTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,7 +195,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B01D7AE82AABC7FF00677F29 /* Zip in Frameworks */,
+				B0317FF22AD9540500613D63 /* Zip in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -189,6 +229,7 @@
 		B01D7AEB2AABCC4A00677F29 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B05861832AD4A38600800359 /* base.css */,
 				B01D7AEC2AABCC6600677F29 /* book.epub */,
 				B07780DC2AA68F1100A53EF8 /* Assets.xcassets */,
 			);
@@ -267,6 +308,8 @@
 			isa = PBXGroup;
 			children = (
 				B01D7B292AB8D97600677F29 /* EPUBDataProvider.swift */,
+				B0CB33882AD49B9B00DD5BE0 /* EPUBDataProviderAutoParse.swift */,
+				B0CB338A2AD49BB500DD5BE0 /* EPUBDataProviderManualParse.swift */,
 			);
 			path = EPUBDataProvider;
 			sourceTree = "<group>";
@@ -311,12 +354,10 @@
 		B07780E92AA68F1100A53EF8 /* MyReaderTests */ = {
 			isa = PBXGroup;
 			children = (
+				B0FB21392AD5FEFD0086DEC1 /* CSS */,
 				B0C59D7B2ACE1C43001525B4 /* Extensions */,
 				B0C59D782ACE1B25001525B4 /* Data */,
 				B07780EA2AA68F1100A53EF8 /* MyReaderTests.swift */,
-				B0C59D762ACE1AE9001525B4 /* CSSParserTests.swift */,
-				B0C59D8A2AD1A18D001525B4 /* CSSColorTests.swift */,
-				B0C59D942AD208E9001525B4 /* CSSNumericValueTests.swift */,
 			);
 			path = MyReaderTests;
 			sourceTree = "<group>";
@@ -368,6 +409,7 @@
 				B01D7AFB2AAFC53C00677F29 /* SharedDateFormatter.swift */,
 				B01D7AFD2AAFC66500677F29 /* AppDateFormatters.swift */,
 				B0C59D8C2AD1A62A001525B4 /* UIColor+RGBA.swift */,
+				B0CB338C2AD49BF300DD5BE0 /* UIFontExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -375,6 +417,7 @@
 		B07781122AA6924500A53EF8 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				B0CB338E2AD49DB600DD5BE0 /* HTMLParser */,
 				B0C59D822AD0C568001525B4 /* CSSParser */,
 				B01D7B712ABF891800677F29 /* EPUBDataProvider */,
 				B01D7B172AB6270700677F29 /* Settings */,
@@ -409,7 +452,7 @@
 		B0C59D752ACCB9BE001525B4 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				B0C59D7E2ACE24E1001525B4 /* HTMLElement.swift */,
+				B0CB33922AD49E3B00DD5BE0 /* EPUBContentDocumentParserResult.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -445,12 +488,61 @@
 		B0C59D832AD0C572001525B4 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B0FB21482AD72F230086DEC1 /* Font */,
 				B0C59D842AD0C579001525B4 /* CSSProperty.swift */,
 				B0C59D882AD0C623001525B4 /* CSSColor.swift */,
 				B0C59D8E2AD1FBAE001525B4 /* CSSTextAlign.swift */,
 				B0C59D922AD2020D001525B4 /* CSSNumericValue.swift */,
+				B0FB213A2AD600480086DEC1 /* CSSGlobalValue.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		B0CB338E2AD49DB600DD5BE0 /* HTMLParser */ = {
+			isa = PBXGroup;
+			children = (
+				B0CB338F2AD49DBD00DD5BE0 /* Models */,
+				B0CB33962AD49EAD00DD5BE0 /* HTMLParser.swift */,
+			);
+			path = HTMLParser;
+			sourceTree = "<group>";
+		};
+		B0CB338F2AD49DBD00DD5BE0 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B0C59D7E2ACE24E1001525B4 /* HTMLElement.swift */,
+				B0CB33902AD49DEC00DD5BE0 /* HTMLComponent.swift */,
+				B0CB33942AD49E7C00DD5BE0 /* HTMLElementType.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		B0FB21392AD5FEFD0086DEC1 /* CSS */ = {
+			isa = PBXGroup;
+			children = (
+				B0C59D762ACE1AE9001525B4 /* CSSParserTests.swift */,
+				B0C59D8A2AD1A18D001525B4 /* CSSColorTests.swift */,
+				B0C59D942AD208E9001525B4 /* CSSNumericValueTests.swift */,
+				B0FB213C2AD6008D0086DEC1 /* CSSGlobalValueTests.swift */,
+				B0FB213E2AD602880086DEC1 /* CSSFontFamilyTests.swift */,
+				B0FB21402AD605930086DEC1 /* CSSFontWeightTests.swift */,
+				B0FB21442AD72F070086DEC1 /* CSSFontStyleTests.swift */,
+				B0FB21492AD731CE0086DEC1 /* CSSFontSizeTests.swift */,
+				B0FB214B2AD74D240086DEC1 /* CSSFontTests.swift */,
+			);
+			path = CSS;
+			sourceTree = "<group>";
+		};
+		B0FB21482AD72F230086DEC1 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				B05861852AD4A43B00800359 /* CSSFontStyle.swift */,
+				B05861872AD4A52900800359 /* CSSFontWeight.swift */,
+				B0FB21372AD5FEEC0086DEC1 /* CSSFontFamily.swift */,
+				B0FB21422AD606E40086DEC1 /* CSSFontSize.swift */,
+				B0FB21462AD72F220086DEC1 /* CSSFont.swift */,
+			);
+			path = Font;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -470,7 +562,7 @@
 			);
 			name = MyReader;
 			packageProductDependencies = (
-				B01D7AE72AABC7FF00677F29 /* Zip */,
+				B0317FF12AD9540500613D63 /* Zip */,
 			);
 			productName = MyReader;
 			productReference = B07780CD2AA68F1000A53EF8 /* MyReader.app */;
@@ -545,7 +637,7 @@
 			);
 			mainGroup = B07780C42AA68F1000A53EF8;
 			packageReferences = (
-				B01D7AE62AABC7FF00677F29 /* XCRemoteSwiftPackageReference "Zip" */,
+				B0317FF02AD9540500613D63 /* XCRemoteSwiftPackageReference "Zip" */,
 			);
 			productRefGroup = B07780CE2AA68F1000A53EF8 /* Products */;
 			projectDirPath = "";
@@ -565,6 +657,7 @@
 			files = (
 				B07780E02AA68F1100A53EF8 /* LaunchScreen.storyboard in Resources */,
 				B07780DD2AA68F1100A53EF8 /* Assets.xcassets in Resources */,
+				B05861842AD4A38600800359 /* base.css in Resources */,
 				B01D7AED2AABCC6600677F29 /* book.epub in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -593,6 +686,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B07781182AA7CE0F00A53EF8 /* CDDataStorage.swift in Sources */,
+				B0FB21472AD72F220086DEC1 /* CSSFont.swift in Sources */,
 				B01D7B012AAFC70300677F29 /* EPUBParserXMLContainerParser.swift in Sources */,
 				B01D7B242AB6697200677F29 /* ReaderViewController.swift in Sources */,
 				B0C59D7F2ACE24E1001525B4 /* HTMLElement.swift in Sources */,
@@ -603,6 +697,7 @@
 				B01D7B032AB0FD9A00677F29 /* EPUBParserModels.swift in Sources */,
 				B01D7B6A2ABDF4E200677F29 /* EPUBContentDocumentParser.swift in Sources */,
 				B01D7AFC2AAFC53C00677F29 /* SharedDateFormatter.swift in Sources */,
+				B0CB33952AD49E7C00DD5BE0 /* HTMLElementType.swift in Sources */,
 				B01D7AEA2AABCB7600677F29 /* EPUBParser.swift in Sources */,
 				B077811F2AA8EC9100A53EF8 /* AppManager.swift in Sources */,
 				B0C59D8D2AD1A62A001525B4 /* UIColor+RGBA.swift in Sources */,
@@ -613,6 +708,8 @@
 				B07781142AA6924B00A53EF8 /* DataStorage.swift in Sources */,
 				B0C59D8F2AD1FBAE001525B4 /* CSSTextAlign.swift in Sources */,
 				B01D7AFE2AAFC66500677F29 /* AppDateFormatters.swift in Sources */,
+				B0FB213B2AD600480086DEC1 /* CSSGlobalValue.swift in Sources */,
+				B0FB21432AD606E40086DEC1 /* CSSFontSize.swift in Sources */,
 				B01D7B6C2ABE209300677F29 /* ReaderCollectionViewCell.swift in Sources */,
 				B077810F2AA6910C00A53EF8 /* NSConstraintInArray.swift in Sources */,
 				B077810B2AA6903300A53EF8 /* BookListHeaderView.swift in Sources */,
@@ -625,17 +722,26 @@
 				B01D7B212AB630EB00677F29 /* BookListCoverImageCache.swift in Sources */,
 				B01D7B142AB5238100677F29 /* DataStorateInitializationManager.swift in Sources */,
 				B07780DB2AA68F1000A53EF8 /* MyReader.xcdatamodeld in Sources */,
+				B05861862AD4A43B00800359 /* CSSFontStyle.swift in Sources */,
 				B01D7B052AB11AF300677F29 /* EPUBParserOPFContainerParser.swift in Sources */,
 				B07781162AA7CD0100A53EF8 /* Book.swift in Sources */,
+				B0CB33972AD49EAD00DD5BE0 /* HTMLParser.swift in Sources */,
 				B01D7B0F2AB50DD900677F29 /* RandomStringGenerator.swift in Sources */,
 				B0C59D892AD0C623001525B4 /* CSSColor.swift in Sources */,
 				B0C59D852AD0C579001525B4 /* CSSProperty.swift in Sources */,
+				B0CB33912AD49DEC00DD5BE0 /* HTMLComponent.swift in Sources */,
 				B0C59D932AD2020D001525B4 /* CSSNumericValue.swift in Sources */,
 				B01D7AE32AABB40500677F29 /* ColorStyle.swift in Sources */,
+				B0CB338B2AD49BB500DD5BE0 /* EPUBDataProviderManualParse.swift in Sources */,
+				B0CB33892AD49B9B00DD5BE0 /* EPUBDataProviderAutoParse.swift in Sources */,
 				B01D7AE12AAA814C00677F29 /* ButtonStyle.swift in Sources */,
+				B05861882AD4A52900800359 /* CSSFontWeight.swift in Sources */,
+				B0CB33932AD49E3B00DD5BE0 /* EPUBContentDocumentParserResult.swift in Sources */,
 				B01D7B192AB6271000677F29 /* UserSettingsAttribute.swift in Sources */,
 				B07780D32AA68F1000A53EF8 /* SceneDelegate.swift in Sources */,
 				B0C59D742AC8B8C6001525B4 /* ImageFileHelper.swift in Sources */,
+				B0FB21382AD5FEEC0086DEC1 /* CSSFontFamily.swift in Sources */,
+				B0CB338D2AD49BF300DD5BE0 /* UIFontExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -643,11 +749,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0FB213F2AD602880086DEC1 /* CSSFontFamilyTests.swift in Sources */,
 				B0C59D912AD1FC7D001525B4 /* CSSTextAlignTests.swift in Sources */,
+				B0FB21412AD605930086DEC1 /* CSSFontWeightTests.swift in Sources */,
+				B0FB213D2AD6008D0086DEC1 /* CSSGlobalValueTests.swift in Sources */,
+				B0FB214C2AD74D240086DEC1 /* CSSFontTests.swift in Sources */,
 				B0C59D7D2ACE1C4B001525B4 /* TestBundle.swift in Sources */,
 				B0C59D8B2AD1A18D001525B4 /* CSSColorTests.swift in Sources */,
 				B0C59D952AD208E9001525B4 /* CSSNumericValueTests.swift in Sources */,
 				B0C59D772ACE1AE9001525B4 /* CSSParserTests.swift in Sources */,
+				B0FB21452AD72F070086DEC1 /* CSSFontStyleTests.swift in Sources */,
+				B0FB214A2AD731CE0086DEC1 /* CSSFontSizeTests.swift in Sources */,
 				B07780EB2AA68F1100A53EF8 /* MyReaderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -976,7 +1088,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		B01D7AE62AABC7FF00677F29 /* XCRemoteSwiftPackageReference "Zip" */ = {
+		B0317FF02AD9540500613D63 /* XCRemoteSwiftPackageReference "Zip" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/marmelroy/Zip.git";
 			requirement = {
@@ -987,9 +1099,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		B01D7AE72AABC7FF00677F29 /* Zip */ = {
+		B0317FF12AD9540500613D63 /* Zip */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B01D7AE62AABC7FF00677F29 /* XCRemoteSwiftPackageReference "Zip" */;
+			package = B0317FF02AD9540500613D63 /* XCRemoteSwiftPackageReference "Zip" */;
 			productName = Zip;
 		};
 /* End XCSwiftPackageProductDependency section */

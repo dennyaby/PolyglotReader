@@ -41,7 +41,7 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
     // MARK: - Init
     
     init?(appManager: AppManager, book: Book) {
-        guard let epubDataProvider = EPUBDataProviderAutoParse(appManager: appManager, book: book) else {
+        guard let epubDataProvider = EPUBDataProviderManualParse(appManager: appManager, book: book) else {
             return nil
         }
         self.epubDataProvider = epubDataProvider

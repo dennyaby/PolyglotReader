@@ -14,6 +14,7 @@
 12. Add word counter for the book (this could be implemented in something like statistics screen).
 13. Additionaly reduce screen brightness.
 14. Add ability to read internet articles (like read mode in Safari). With ability to download page, translate text and add to Anki.
+15. Give goals to one read (for example - read 1%, read 10 pages etc.). When user starts the goal, all interface that telling him about the goal is hidden (like number of pages). It looks like focus mode. When user reaches the goal, app tells him that.
 
 
 # Technical Questions
