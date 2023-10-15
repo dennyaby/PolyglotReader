@@ -13,29 +13,8 @@ final class CSSParser {
     
     typealias Properties = [CSSProperty: String]
     
-    enum HTMLElementKey: Hashable {
-        case any
-        case element(HTMLElement)
-    }
-    
-    enum HTMLIDKey: Hashable {
-        case any
-        case id(String)
-    }
-    
-    enum HTMLClassesKey: Hashable {
-        case any
-        case classes(Set<String>)
-    }
-    
-    struct CSSSelector: Hashable {
-        let element: HTMLElement?
-        let classes: Set<String>
-        let id: String?
-    }
-    
     static let selectorsRegularExpression: NSRegularExpression? = {
-        return try? NSRegularExpression(pattern: "([a-z0-9#\\.]+)[\\n\\r\\s\\t]*\\{([^\\}]*)\\}")
+        return try? NSRegularExpression(pattern: "([^\\{^\\}]+)\\{([^\\}]*)\\}")
     }()
     
     static let propertiesRegularExpression: NSRegularExpression? = {
@@ -60,7 +39,7 @@ final class CSSParser {
     
     // MARK: - Interface
     
-    func parse(url: URL) -> Result? {
+    func parse(url: URL) -> CSSParserResult? {
         guard let data = try? Data(contentsOf: url) else {
             return nil
         }
@@ -72,7 +51,7 @@ final class CSSParser {
         return parse(string: fileString)
     }
     
-    func parse(string: String) -> Result? {
+    func parse(string: String) -> CSSParserResult? {
         guard let selectorRegExp = Self.selectorsRegularExpression,
               let propertyRegExp = Self.propertiesRegularExpression else {
             return nil
@@ -97,49 +76,55 @@ final class CSSParser {
             selectors[selector] = properties
         }
         
-        return Result(css: buildCSSTree(from: selectors))
+        return CSSParserResult(selectors: selectors)
     }
     
     // MARK: - Helper
     
-    private func buildCSSTree(from selectors: [CSSSelector: Properties]) -> Result.CSSTree {
-        var result: Result.CSSTree = [:]
-        
-        for (selector, properties) in selectors {
-            let elementKey: HTMLElementKey
-            if let element = selector.element {
-                elementKey = .element(element)
-            } else {
-                elementKey = .any
-            }
-            
-            let classesKey: HTMLClassesKey = selector.classes.isEmpty ? .any : .classes(selector.classes)
-            let idKey: HTMLIDKey
-            if let id = selector.id {
-                idKey = .id(id)
-            } else {
-                idKey = .any
-            }
-            
-            if result[elementKey] == nil {
-                result[elementKey] = [:]
-            }
-            
-            if result[elementKey]?[classesKey] == nil {
-                result[elementKey]?[classesKey] = [:]
-            }
-            
-            result[elementKey]?[classesKey]?[idKey] = properties
+    private func selector(from string: String) -> CSSSelector {
+        let normalized = string.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        if normalized == "*" {
+            return .all
         }
         
-        return result
+        let entities = normalized.components(separatedBy: ",").map({ $0.trimmingCharacters(in: .whitespacesAndNewlines)})
+        if entities.count > 1 {
+            return .entities(entities.map(cssEntity(from:)))
+        } else {
+            let childItems = normalized.split(separator: ">", maxSplits: 1)
+            if childItems.count == 2 {
+                let parent = childItems[0].trimmingCharacters(in: .whitespacesAndNewlines)
+                let child = childItems[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                return .child(cssEntity(from: parent), cssEntity(from: child))
+            }
+            
+            let nextSiblingItems = normalized.split(separator: "+", maxSplits: 1)
+            if nextSiblingItems.count == 2 {
+                let firstSibling = nextSiblingItems[0].trimmingCharacters(in: .whitespacesAndNewlines)
+                let nextSibling = nextSiblingItems[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                return .nextSibling(cssEntity(from: firstSibling), cssEntity(from: nextSibling))
+            }
+            
+            let subsequentSiblingsItems = normalized.split(separator: "~", maxSplits: 1)
+            if subsequentSiblingsItems.count == 2 {
+                let firstSibling = subsequentSiblingsItems[0].trimmingCharacters(in: .whitespacesAndNewlines)
+                let secondSibling = subsequentSiblingsItems[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                return .subsequentSibling(cssEntity(from: firstSibling), cssEntity(from: secondSibling))
+            }
+            
+            let descendantItems = normalized.split(separator: " ").filter({ $0.isEmpty == false })
+            if descendantItems.count == 2 {
+                let parent = descendantItems[0].trimmingCharacters(in: .whitespacesAndNewlines)
+                let descendant = descendantItems[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                return .descendant(cssEntity(from: parent), cssEntity(from: descendant))
+            }
+            
+            return .entities([cssEntity(from: normalized)])
+        }
     }
     
-    private func selector(from string: String) -> CSSSelector {
-        if string.trimmingCharacters(in: .whitespacesAndNewlines) == "*" {
-            return .init(element: nil, classes: [], id: nil)
-        }
-        
+    
+    private func cssEntity(from string: String) -> CSSEntity {
         var element: HTMLElement?
         var classes: Set<String> = []
         var id: String?
@@ -163,7 +148,7 @@ final class CSSParser {
             id = String(string[range].dropFirst())
         })
   
-        return CSSSelector(element: element, classes: classes, id: id)
+        return CSSEntity(element: element, classes: classes, id: id)
     }
     
     private func bodyValues(from string: String, regex: NSRegularExpression) -> Properties {
@@ -187,5 +172,4 @@ final class CSSParser {
         
         return result
     }
-    
 }

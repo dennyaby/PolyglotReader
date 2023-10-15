@@ -15,12 +15,16 @@ extension EPUBContentDocumentParser {
                 case image(String)
             }
             
-            let elementType: ElementType
+            var elementType: ElementType
             let attributes: Attributes
             
             // MARK: - Attributes
             
             struct Attributes {
+                
+                // TODO: Remove inner structs
+                // TODO: Is all attributes should live more then one element?
+                
                 var fontTraits: UIFontDescriptor.SymbolicTraits = []
                 var fontSize: CSSNumericValue?
                 struct Font {
@@ -37,17 +41,16 @@ extension EPUBContentDocumentParser {
                     var alt: String?
                 }
                 
-                struct Link {
-                    var link: String?
-                }
-                
                 var textColor: UIColor?
                 var font = Font()
                 var image = Image()
-                var link = Link()
+                var href: String?
+                var src: String?
+                var alt: String?
+                var display: CSSDisplay?
                 var width: CSSNumericValue?
                 var height: CSSNumericValue?
-                var textAlign: NSTextAlignment = .left
+                var textAlign: NSTextAlignment?
             }
         }
         

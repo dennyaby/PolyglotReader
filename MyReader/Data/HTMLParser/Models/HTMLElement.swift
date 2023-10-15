@@ -7,11 +7,12 @@
 
 import Foundation
 
-enum HTMLElement: Hashable {
+enum HTMLElement: String, Hashable {
     case body
     case a
     case p
     case div
+    case span
     case h1
     case h2
     case h3
@@ -23,26 +24,32 @@ enum HTMLElement: Hashable {
     case em
     case br
     case link
-    case other(String)
+    case strong
+    case b
+    case cite
+    case code
+    case dfn
+    case i
+    case kbd
+    case object
+    case q
+    case samp
+    case sub
+    case sup
+    case time
+    case variable = "var"
+    case html
+    case title
+    case unknown
+    
+    // MARK: - Init
     
     init(from: String) {
-        switch from {
-        case "body": self = .body
-        case "a": self = .a
-        case "div": self = .div
-        case "p": self = .p
-        case "h1": self = .h1
-        case "h2": self = .h2
-        case "h3": self = .h3
-        case "h4": self = .h4
-        case "h5": self = .h5
-        case "h6": self = .h6
-        case "head": self = .head
-        case "img": self = .img
-        case "em": self = .em
-        case "br": self = .br
-        case "link": self = .link
-        default: self = .other(from)
+        let normalized = from.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        if let element = HTMLElement(rawValue: normalized) {
+            self = element
+        } else {
+            self = .unknown
         }
     }
 }

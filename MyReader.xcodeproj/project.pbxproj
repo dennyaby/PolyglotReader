@@ -60,7 +60,6 @@
 		B0C59D7F2ACE24E1001525B4 /* HTMLElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C59D7E2ACE24E1001525B4 /* HTMLElement.swift */; };
 		B0C59D812ACF0726001525B4 /* complex_selectors.css in Resources */ = {isa = PBXBuildFile; fileRef = B0C59D802ACF0726001525B4 /* complex_selectors.css */; };
 		B0C59D852AD0C579001525B4 /* CSSProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C59D842AD0C579001525B4 /* CSSProperty.swift */; };
-		B0C59D872AD0C5B6001525B4 /* CSSParserResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C59D862AD0C5B6001525B4 /* CSSParserResult.swift */; };
 		B0C59D892AD0C623001525B4 /* CSSColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C59D882AD0C623001525B4 /* CSSColor.swift */; };
 		B0C59D8B2AD1A18D001525B4 /* CSSColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C59D8A2AD1A18D001525B4 /* CSSColorTests.swift */; };
 		B0C59D8D2AD1A62A001525B4 /* UIColor+RGBA.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C59D8C2AD1A62A001525B4 /* UIColor+RGBA.swift */; };
@@ -75,6 +74,20 @@
 		B0CB33932AD49E3B00DD5BE0 /* EPUBContentDocumentParserResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0CB33922AD49E3B00DD5BE0 /* EPUBContentDocumentParserResult.swift */; };
 		B0CB33952AD49E7C00DD5BE0 /* HTMLElementType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0CB33942AD49E7C00DD5BE0 /* HTMLElementType.swift */; };
 		B0CB33972AD49EAD00DD5BE0 /* HTMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0CB33962AD49EAD00DD5BE0 /* HTMLParser.swift */; };
+		B0D3BC182ADC6EFC002F6972 /* CSSEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D3BC172ADC6EFC002F6972 /* CSSEntity.swift */; };
+		B0D3BC1A2ADC6F87002F6972 /* CSSSpecifity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D3BC192ADC6F87002F6972 /* CSSSpecifity.swift */; };
+		B0D3BC1C2ADC7529002F6972 /* CSSTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D3BC1B2ADC7529002F6972 /* CSSTree.swift */; };
+		B0D3BC1E2ADC75BD002F6972 /* CSSParserResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D3BC1D2ADC75BD002F6972 /* CSSParserResult.swift */; };
+		B0D3BC222ADC7B63002F6972 /* CSSSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D3BC212ADC7B63002F6972 /* CSSSelector.swift */; };
+		B0D3BC242ADC8C21002F6972 /* combinator_selectors.css in Resources */ = {isa = PBXBuildFile; fileRef = B0D3BC232ADC8C21002F6972 /* combinator_selectors.css */; };
+		B0D5BADB2ADB32C30095DF2F /* CSSDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D5BADA2ADB32C30095DF2F /* CSSDisplay.swift */; };
+		B0D5BADE2ADB51530095DF2F /* EPUBContentDocumentParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D5BADD2ADB51530095DF2F /* EPUBContentDocumentParserTests.swift */; };
+		B0D5BAE72ADB58640095DF2F /* html3.html in Resources */ = {isa = PBXBuildFile; fileRef = B0D5BAE22ADB58640095DF2F /* html3.html */; };
+		B0D5BAE82ADB58640095DF2F /* html1.html in Resources */ = {isa = PBXBuildFile; fileRef = B0D5BAE32ADB58640095DF2F /* html1.html */; };
+		B0D5BAE92ADB58640095DF2F /* html2.html in Resources */ = {isa = PBXBuildFile; fileRef = B0D5BAE42ADB58640095DF2F /* html2.html */; };
+		B0D5BAEA2ADB58640095DF2F /* html4.html in Resources */ = {isa = PBXBuildFile; fileRef = B0D5BAE52ADB58640095DF2F /* html4.html */; };
+		B0D5BAEB2ADB58640095DF2F /* html5.html in Resources */ = {isa = PBXBuildFile; fileRef = B0D5BAE62ADB58640095DF2F /* html5.html */; };
+		B0D5BAEE2ADB588F0095DF2F /* HTMLParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D5BAED2ADB588F0095DF2F /* HTMLParserTests.swift */; };
 		B0FB21382AD5FEEC0086DEC1 /* CSSFontFamily.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FB21372AD5FEEC0086DEC1 /* CSSFontFamily.swift */; };
 		B0FB213B2AD600480086DEC1 /* CSSGlobalValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FB213A2AD600480086DEC1 /* CSSGlobalValue.swift */; };
 		B0FB213D2AD6008D0086DEC1 /* CSSGlobalValueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FB213C2AD6008D0086DEC1 /* CSSGlobalValueTests.swift */; };
@@ -163,12 +176,11 @@
 		B0C59D7E2ACE24E1001525B4 /* HTMLElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLElement.swift; sourceTree = "<group>"; };
 		B0C59D802ACF0726001525B4 /* complex_selectors.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = complex_selectors.css; sourceTree = "<group>"; };
 		B0C59D842AD0C579001525B4 /* CSSProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSProperty.swift; sourceTree = "<group>"; };
-		B0C59D862AD0C5B6001525B4 /* CSSParserResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSParserResult.swift; sourceTree = "<group>"; };
 		B0C59D882AD0C623001525B4 /* CSSColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSColor.swift; sourceTree = "<group>"; };
 		B0C59D8A2AD1A18D001525B4 /* CSSColorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSColorTests.swift; sourceTree = "<group>"; };
 		B0C59D8C2AD1A62A001525B4 /* UIColor+RGBA.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+RGBA.swift"; sourceTree = "<group>"; };
 		B0C59D8E2AD1FBAE001525B4 /* CSSTextAlign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSTextAlign.swift; sourceTree = "<group>"; };
-		B0C59D902AD1FC7D001525B4 /* CSSTextAlignTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CSSTextAlignTests.swift; path = MyReaderTests/CSSTextAlignTests.swift; sourceTree = SOURCE_ROOT; };
+		B0C59D902AD1FC7D001525B4 /* CSSTextAlignTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CSSTextAlignTests.swift; path = MyReaderTests/CSS/Model/CSSTextAlignTests.swift; sourceTree = SOURCE_ROOT; };
 		B0C59D922AD2020D001525B4 /* CSSNumericValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSNumericValue.swift; sourceTree = "<group>"; };
 		B0C59D942AD208E9001525B4 /* CSSNumericValueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSNumericValueTests.swift; sourceTree = "<group>"; };
 		B0CB33882AD49B9B00DD5BE0 /* EPUBDataProviderAutoParse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPUBDataProviderAutoParse.swift; sourceTree = "<group>"; };
@@ -178,6 +190,20 @@
 		B0CB33922AD49E3B00DD5BE0 /* EPUBContentDocumentParserResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPUBContentDocumentParserResult.swift; sourceTree = "<group>"; };
 		B0CB33942AD49E7C00DD5BE0 /* HTMLElementType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLElementType.swift; sourceTree = "<group>"; };
 		B0CB33962AD49EAD00DD5BE0 /* HTMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLParser.swift; sourceTree = "<group>"; };
+		B0D3BC172ADC6EFC002F6972 /* CSSEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSEntity.swift; sourceTree = "<group>"; };
+		B0D3BC192ADC6F87002F6972 /* CSSSpecifity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSSpecifity.swift; sourceTree = "<group>"; };
+		B0D3BC1B2ADC7529002F6972 /* CSSTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSTree.swift; sourceTree = "<group>"; };
+		B0D3BC1D2ADC75BD002F6972 /* CSSParserResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSParserResult.swift; sourceTree = "<group>"; };
+		B0D3BC212ADC7B63002F6972 /* CSSSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSSelector.swift; sourceTree = "<group>"; };
+		B0D3BC232ADC8C21002F6972 /* combinator_selectors.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = combinator_selectors.css; sourceTree = "<group>"; };
+		B0D5BADA2ADB32C30095DF2F /* CSSDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSDisplay.swift; sourceTree = "<group>"; };
+		B0D5BADD2ADB51530095DF2F /* EPUBContentDocumentParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPUBContentDocumentParserTests.swift; sourceTree = "<group>"; };
+		B0D5BAE22ADB58640095DF2F /* html3.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = html3.html; sourceTree = "<group>"; };
+		B0D5BAE32ADB58640095DF2F /* html1.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = html1.html; sourceTree = "<group>"; };
+		B0D5BAE42ADB58640095DF2F /* html2.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = html2.html; sourceTree = "<group>"; };
+		B0D5BAE52ADB58640095DF2F /* html4.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = html4.html; sourceTree = "<group>"; };
+		B0D5BAE62ADB58640095DF2F /* html5.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = html5.html; sourceTree = "<group>"; };
+		B0D5BAED2ADB588F0095DF2F /* HTMLParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLParserTests.swift; sourceTree = "<group>"; };
 		B0FB21372AD5FEEC0086DEC1 /* CSSFontFamily.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSFontFamily.swift; sourceTree = "<group>"; };
 		B0FB213A2AD600480086DEC1 /* CSSGlobalValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSGlobalValue.swift; sourceTree = "<group>"; };
 		B0FB213C2AD6008D0086DEC1 /* CSSGlobalValueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSGlobalValueTests.swift; sourceTree = "<group>"; };
@@ -354,6 +380,8 @@
 		B07780E92AA68F1100A53EF8 /* MyReaderTests */ = {
 			isa = PBXGroup;
 			children = (
+				B0D5BAEC2ADB58770095DF2F /* HTML */,
+				B0D5BADC2ADB514B0095DF2F /* EPUB */,
 				B0FB21392AD5FEFD0086DEC1 /* CSS */,
 				B0C59D7B2ACE1C43001525B4 /* Extensions */,
 				B0C59D782ACE1B25001525B4 /* Data */,
@@ -460,9 +488,8 @@
 		B0C59D782ACE1B25001525B4 /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				B0C59D802ACF0726001525B4 /* complex_selectors.css */,
-				B0C59D792ACE1B79001525B4 /* simple.css */,
-				B0C59D902AD1FC7D001525B4 /* CSSTextAlignTests.swift */,
+				B0D5BAE12ADB57EF0095DF2F /* html */,
+				B0D5BAE02ADB57EC0095DF2F /* css */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -480,7 +507,6 @@
 			children = (
 				B0C59D832AD0C572001525B4 /* Models */,
 				B01D7B742ABF8D0C00677F29 /* CSSParser.swift */,
-				B0C59D862AD0C5B6001525B4 /* CSSParserResult.swift */,
 			);
 			path = CSSParser;
 			sourceTree = "<group>";
@@ -488,12 +514,12 @@
 		B0C59D832AD0C572001525B4 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				B0FB21482AD72F230086DEC1 /* Font */,
-				B0C59D842AD0C579001525B4 /* CSSProperty.swift */,
-				B0C59D882AD0C623001525B4 /* CSSColor.swift */,
-				B0C59D8E2AD1FBAE001525B4 /* CSSTextAlign.swift */,
-				B0C59D922AD2020D001525B4 /* CSSNumericValue.swift */,
-				B0FB213A2AD600480086DEC1 /* CSSGlobalValue.swift */,
+				B0D3BC162ADC6E81002F6972 /* Properties */,
+				B0D3BC172ADC6EFC002F6972 /* CSSEntity.swift */,
+				B0D3BC192ADC6F87002F6972 /* CSSSpecifity.swift */,
+				B0D3BC1B2ADC7529002F6972 /* CSSTree.swift */,
+				B0D3BC1D2ADC75BD002F6972 /* CSSParserResult.swift */,
+				B0D3BC212ADC7B63002F6972 /* CSSSelector.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -517,10 +543,31 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		B0FB21392AD5FEFD0086DEC1 /* CSS */ = {
+		B0D3BC162ADC6E81002F6972 /* Properties */ = {
 			isa = PBXGroup;
 			children = (
-				B0C59D762ACE1AE9001525B4 /* CSSParserTests.swift */,
+				B0FB21482AD72F230086DEC1 /* Font */,
+				B0C59D842AD0C579001525B4 /* CSSProperty.swift */,
+				B0C59D882AD0C623001525B4 /* CSSColor.swift */,
+				B0C59D8E2AD1FBAE001525B4 /* CSSTextAlign.swift */,
+				B0C59D922AD2020D001525B4 /* CSSNumericValue.swift */,
+				B0FB213A2AD600480086DEC1 /* CSSGlobalValue.swift */,
+				B0D5BADA2ADB32C30095DF2F /* CSSDisplay.swift */,
+			);
+			path = Properties;
+			sourceTree = "<group>";
+		};
+		B0D5BADC2ADB514B0095DF2F /* EPUB */ = {
+			isa = PBXGroup;
+			children = (
+				B0D5BADD2ADB51530095DF2F /* EPUBContentDocumentParserTests.swift */,
+			);
+			path = EPUB;
+			sourceTree = "<group>";
+		};
+		B0D5BADF2ADB518F0095DF2F /* Model */ = {
+			isa = PBXGroup;
+			children = (
 				B0C59D8A2AD1A18D001525B4 /* CSSColorTests.swift */,
 				B0C59D942AD208E9001525B4 /* CSSNumericValueTests.swift */,
 				B0FB213C2AD6008D0086DEC1 /* CSSGlobalValueTests.swift */,
@@ -529,6 +576,46 @@
 				B0FB21442AD72F070086DEC1 /* CSSFontStyleTests.swift */,
 				B0FB21492AD731CE0086DEC1 /* CSSFontSizeTests.swift */,
 				B0FB214B2AD74D240086DEC1 /* CSSFontTests.swift */,
+				B0C59D902AD1FC7D001525B4 /* CSSTextAlignTests.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		B0D5BAE02ADB57EC0095DF2F /* css */ = {
+			isa = PBXGroup;
+			children = (
+				B0D3BC232ADC8C21002F6972 /* combinator_selectors.css */,
+				B0C59D802ACF0726001525B4 /* complex_selectors.css */,
+				B0C59D792ACE1B79001525B4 /* simple.css */,
+			);
+			path = css;
+			sourceTree = "<group>";
+		};
+		B0D5BAE12ADB57EF0095DF2F /* html */ = {
+			isa = PBXGroup;
+			children = (
+				B0D5BAE32ADB58640095DF2F /* html1.html */,
+				B0D5BAE42ADB58640095DF2F /* html2.html */,
+				B0D5BAE22ADB58640095DF2F /* html3.html */,
+				B0D5BAE52ADB58640095DF2F /* html4.html */,
+				B0D5BAE62ADB58640095DF2F /* html5.html */,
+			);
+			path = html;
+			sourceTree = "<group>";
+		};
+		B0D5BAEC2ADB58770095DF2F /* HTML */ = {
+			isa = PBXGroup;
+			children = (
+				B0D5BAED2ADB588F0095DF2F /* HTMLParserTests.swift */,
+			);
+			path = HTML;
+			sourceTree = "<group>";
+		};
+		B0FB21392AD5FEFD0086DEC1 /* CSS */ = {
+			isa = PBXGroup;
+			children = (
+				B0D5BADF2ADB518F0095DF2F /* Model */,
+				B0C59D762ACE1AE9001525B4 /* CSSParserTests.swift */,
 			);
 			path = CSS;
 			sourceTree = "<group>";
@@ -666,8 +753,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0D5BAEB2ADB58640095DF2F /* html5.html in Resources */,
+				B0D5BAEA2ADB58640095DF2F /* html4.html in Resources */,
 				B0C59D7A2ACE1B79001525B4 /* simple.css in Resources */,
+				B0D3BC242ADC8C21002F6972 /* combinator_selectors.css in Resources */,
+				B0D5BAE92ADB58640095DF2F /* html2.html in Resources */,
 				B0C59D812ACF0726001525B4 /* complex_selectors.css in Resources */,
+				B0D5BAE72ADB58640095DF2F /* html3.html in Resources */,
+				B0D5BAE82ADB58640095DF2F /* html1.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -686,6 +779,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B07781182AA7CE0F00A53EF8 /* CDDataStorage.swift in Sources */,
+				B0D3BC222ADC7B63002F6972 /* CSSSelector.swift in Sources */,
 				B0FB21472AD72F220086DEC1 /* CSSFont.swift in Sources */,
 				B01D7B012AAFC70300677F29 /* EPUBParserXMLContainerParser.swift in Sources */,
 				B01D7B242AB6697200677F29 /* ReaderViewController.swift in Sources */,
@@ -695,22 +789,24 @@
 				B07781112AA6921000A53EF8 /* BookListCollectionViewDataSource.swift in Sources */,
 				B01D7AE52AABBF5000677F29 /* BookImportManager.swift in Sources */,
 				B01D7B032AB0FD9A00677F29 /* EPUBParserModels.swift in Sources */,
+				B0D3BC1C2ADC7529002F6972 /* CSSTree.swift in Sources */,
 				B01D7B6A2ABDF4E200677F29 /* EPUBContentDocumentParser.swift in Sources */,
 				B01D7AFC2AAFC53C00677F29 /* SharedDateFormatter.swift in Sources */,
 				B0CB33952AD49E7C00DD5BE0 /* HTMLElementType.swift in Sources */,
 				B01D7AEA2AABCB7600677F29 /* EPUBParser.swift in Sources */,
 				B077811F2AA8EC9100A53EF8 /* AppManager.swift in Sources */,
 				B0C59D8D2AD1A62A001525B4 /* UIColor+RGBA.swift in Sources */,
-				B0C59D872AD0C5B6001525B4 /* CSSParserResult.swift in Sources */,
 				B01D7B752ABF8D0C00677F29 /* CSSParser.swift in Sources */,
 				B01D7B1B2AB6276600677F29 /* UserSettings.swift in Sources */,
 				B01D7B6E2ABE20D200677F29 /* ReaderCollectionView.swift in Sources */,
 				B07781142AA6924B00A53EF8 /* DataStorage.swift in Sources */,
 				B0C59D8F2AD1FBAE001525B4 /* CSSTextAlign.swift in Sources */,
+				B0D3BC1A2ADC6F87002F6972 /* CSSSpecifity.swift in Sources */,
 				B01D7AFE2AAFC66500677F29 /* AppDateFormatters.swift in Sources */,
 				B0FB213B2AD600480086DEC1 /* CSSGlobalValue.swift in Sources */,
 				B0FB21432AD606E40086DEC1 /* CSSFontSize.swift in Sources */,
 				B01D7B6C2ABE209300677F29 /* ReaderCollectionViewCell.swift in Sources */,
+				B0D5BADB2ADB32C30095DF2F /* CSSDisplay.swift in Sources */,
 				B077810F2AA6910C00A53EF8 /* NSConstraintInArray.swift in Sources */,
 				B077810B2AA6903300A53EF8 /* BookListHeaderView.swift in Sources */,
 				B077811A2AA7D4FF00A53EF8 /* AppFileManager.swift in Sources */,
@@ -718,6 +814,7 @@
 				B01D7B1F2AB62E1300677F29 /* FontStyle.swift in Sources */,
 				B01D7B2A2AB8D97600677F29 /* EPUBDataProvider.swift in Sources */,
 				B01D7B1D2AB62B2700677F29 /* BookListCollectionViewCell.swift in Sources */,
+				B0D3BC182ADC6EFC002F6972 /* CSSEntity.swift in Sources */,
 				B07781072AA68FAE00A53EF8 /* BookListViewController.swift in Sources */,
 				B01D7B212AB630EB00677F29 /* BookListCoverImageCache.swift in Sources */,
 				B01D7B142AB5238100677F29 /* DataStorateInitializationManager.swift in Sources */,
@@ -732,6 +829,7 @@
 				B0CB33912AD49DEC00DD5BE0 /* HTMLComponent.swift in Sources */,
 				B0C59D932AD2020D001525B4 /* CSSNumericValue.swift in Sources */,
 				B01D7AE32AABB40500677F29 /* ColorStyle.swift in Sources */,
+				B0D3BC1E2ADC75BD002F6972 /* CSSParserResult.swift in Sources */,
 				B0CB338B2AD49BB500DD5BE0 /* EPUBDataProviderManualParse.swift in Sources */,
 				B0CB33892AD49B9B00DD5BE0 /* EPUBDataProviderAutoParse.swift in Sources */,
 				B01D7AE12AAA814C00677F29 /* ButtonStyle.swift in Sources */,
@@ -751,6 +849,7 @@
 			files = (
 				B0FB213F2AD602880086DEC1 /* CSSFontFamilyTests.swift in Sources */,
 				B0C59D912AD1FC7D001525B4 /* CSSTextAlignTests.swift in Sources */,
+				B0D5BADE2ADB51530095DF2F /* EPUBContentDocumentParserTests.swift in Sources */,
 				B0FB21412AD605930086DEC1 /* CSSFontWeightTests.swift in Sources */,
 				B0FB213D2AD6008D0086DEC1 /* CSSGlobalValueTests.swift in Sources */,
 				B0FB214C2AD74D240086DEC1 /* CSSFontTests.swift in Sources */,
@@ -759,6 +858,7 @@
 				B0C59D952AD208E9001525B4 /* CSSNumericValueTests.swift in Sources */,
 				B0C59D772ACE1AE9001525B4 /* CSSParserTests.swift in Sources */,
 				B0FB21452AD72F070086DEC1 /* CSSFontStyleTests.swift in Sources */,
+				B0D5BAEE2ADB588F0095DF2F /* HTMLParserTests.swift in Sources */,
 				B0FB214A2AD731CE0086DEC1 /* CSSFontSizeTests.swift in Sources */,
 				B07780EB2AA68F1100A53EF8 /* MyReaderTests.swift in Sources */,
 			);

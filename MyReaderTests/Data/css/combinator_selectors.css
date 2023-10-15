@@ -1,0 +1,16 @@
+h1, h2, h3 {
+	width: 50px;
+}
+
+.class1, #id1, h6 {
+	width: 100px;
+}
+
+div > a {
+	width: 150px;
+}
+
+.class1.class3#id5 > p#id8 {
+	width: 200px;
+}
+

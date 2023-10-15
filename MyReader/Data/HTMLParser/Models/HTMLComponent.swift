@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum HTMLComponent: CustomStringConvertible {
+enum HTMLComponent: CustomStringConvertible, Equatable {
     var description: String {
         switch self {
         case .text(let text):
@@ -18,15 +18,34 @@ enum HTMLComponent: CustomStringConvertible {
         }
     }
     
-    class Element {
+    class Element: Equatable {
+        
+        // MARK: - Properties
+        
         let name: HTMLElement
         let attributes: [String: String]
         var components: [HTMLComponent]
+        
+        // MARK: - Init
         
         init(name: HTMLElement, attributes: [String : String], components: [HTMLComponent]) {
             self.name = name
             self.attributes = attributes
             self.components = components
+        }
+        
+        // MARK: - Equatable
+        
+        static func == (lhs: HTMLComponent.Element, rhs: HTMLComponent.Element) -> Bool {
+            guard lhs.name == rhs.name else {
+                return false
+            }
+            
+            guard lhs.attributes == rhs.attributes else {
+                return false
+            }
+            
+            return lhs.components == rhs.components
         }
     }
     

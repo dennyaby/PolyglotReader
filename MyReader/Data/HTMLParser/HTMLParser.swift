@@ -59,6 +59,9 @@ final class HTMLParser: NSObject, XMLParserDelegate {
             fatalError("No element")
         }
         
-        lastElement.components.append(.text(string.trimmingCharacters(in: .whitespacesAndNewlines)))
+        let text = string.trimmingCharacters(in: .whitespacesAndNewlines)
+        if text.isEmpty == false {
+            lastElement.components.append(.text(text))
+        }
     }
 }

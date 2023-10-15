@@ -27,6 +27,15 @@ h6 {
 	font-style: bold;
 }
 
-em {
+em, i {
 	font-style: italic;
 }
+
+b, strong {
+    font-style: bold;
+}
+
+a, b, br, cite, code, dfn, em, i, img, kbd, object, q, samp, span, strong, sub, sup, time, var {
+    display: inline;
+}
+

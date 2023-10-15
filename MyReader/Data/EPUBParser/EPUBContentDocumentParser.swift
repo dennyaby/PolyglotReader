@@ -10,19 +10,31 @@ import UIKit.UIColor
 
 final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
     
+    // MARK: - Nested Types
+    
+    private struct BuildDocumentResult {
+        fileprivate struct Element {
+            let element: DocumentResult.Element
+            let requestNewLine: Bool
+        }
+        
+        let elements: [Element]
+        let requestNewLine: Bool
+    }
+    
     // MARK: - Properties
     
     private let htmlParser = HTMLParser()
-    private var stylesForCurrentDocument: [CSSParser.Result] = []
+    private var stylesForCurrentDocument: [CSSParserResult] = []
     
     private let cssParser = CSSParser()
-    private var styles: [URL: CSSParser.Result] = [:]
+    private var styles: [URL: CSSParserResult] = [:]
     
-    private lazy var baseStyle: CSSParser.Result? = {
+    private static let baseStyle: CSSParserResult? = {
         guard let url = Bundle.main.url(forResource: "base", withExtension: "css") else {
             return nil
         }
-        return cssParser.parse(url: url)
+        return CSSParser().parse(url: url)
     }()
     
     // MARK: - Interface
@@ -32,83 +44,67 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
             return nil
         }
         
-        stylesForCurrentDocument = [baseStyle].compactMap({ $0 })
-        return DocumentResult(elements: buildDocumentResult(from: component, url: url))
+        stylesForCurrentDocument = [Self.baseStyle].compactMap({ $0 })
+        
+        let buildDocumentResultElements = buildDocumentResult(from: component, url: url)
+        let elements = convertToDocumentElement(buildDocumentResultElements.elements)
+        return DocumentResult(elements: elements)
     }
     
     // MARK: - Logic
     
-    private func buildDocumentResult(from component: HTMLComponent, url: URL, attributes: DocumentResult.Element.Attributes = .init()) -> [DocumentResult.Element] {
-        var newAttributes = attributes
-        var result: [DocumentResult.Element] = []
-        
+    private func buildDocumentResult(from component: HTMLComponent, url: URL, attributes: DocumentResult.Element.Attributes = .init(), componentsStack: [HTMLComponent] = [], requestNewLine rnl: Bool = false) -> BuildDocumentResult {
         switch component {
         case .text(let text):
             if text != "" {
-                return [.init(elementType: .text(text), attributes: attributes)]
+                return BuildDocumentResult(elements: [.init(element: .init(elementType: .text(text), attributes: attributes), requestNewLine: rnl)], requestNewLine: false)
             } else {
-                return []
+                return BuildDocumentResult(elements: [], requestNewLine: rnl)
             }
         case .element(let element):
             guard element.name != .head else {
                 loadResourcesFrom(headComponents: element.components, documentUrl: url)
-                return []
+                return BuildDocumentResult(elements: [], requestNewLine: false)
             }
             
-            if let width = element.attributes["width"], let widthValue = CSSNumericValue(string: width) {
-                newAttributes.width = widthValue
-            }
-            if let height = element.attributes["height"], let heightValue = CSSNumericValue(string: height) {
-                newAttributes.height = heightValue
-            }
+            var requestNewLine = rnl
+            var newAttributes = apply(htmlAttributes: element.attributes, to: attributes)
             
-
-            switch element.name {
-            case .a:
-                newAttributes.link = .init(link: element.attributes["href"])
-            case .div, .p:
-                result.append(.init(elementType: .text("\n\n"), attributes: newAttributes))
-            case .h1, .h2, .h3, .h4, .h5, .h6:
-//                newAttributes.font.traits.insert(.traitBold)
-//
-//                let multiplier: CGFloat
-//                switch element.name {
-//                case .h1: multiplier = 2.5
-//                case .h2: multiplier = 2.1
-//                case .h3: multiplier = 1.8
-//                case .h4: multiplier = 1.5
-//                case .h5: multiplier = 1.3
-//                default: multiplier = 1.15
-//                }
-//                newAttributes.font.sizeMultiplier = multiplier
-                
-                result.append(.init(elementType: .text("\n\n"), attributes: newAttributes))
-            case .img:
-                if let src = element.attributes["src"] {
-                    newAttributes.image = .init(alt: element.attributes["alt"])
-                    result.append(.init(elementType: .image(src), attributes: newAttributes))
-                }
-//            case .em:
-//                newAttributes.font.traits.insert(.traitItalic)
-            case .br:
-                result.append(.init(elementType: .text("\n"), attributes: newAttributes))
-            default:
-                break
-            }
+            let classes = Set((element.attributes["class"] ?? "").components(separatedBy: " ").filter({ $0.isEmpty == false }).map({ String($0) }))
+            let entity = CSSEntity(element: element.name, classes: classes, id: element.attributes["id"])
             
             for style in stylesForCurrentDocument {
-                newAttributes = apply(css: style, to: element, currentAttributes: newAttributes)
+                newAttributes = apply(css: style, to: entity, currentAttributes: newAttributes)
             }
             
-            return result + element.components.flatMap { buildDocumentResult(from: $0, url: url, attributes: newAttributes)}
+            let isBlock = (newAttributes.display ?? .block) == .block
+            if isBlock {
+                requestNewLine = true
+            }
+            
+            var result: [BuildDocumentResult.Element] = []
+            if element.name == .img, let src = element.attributes["src"] {
+                result.append(.init(element: .init(elementType: .image(src), attributes: newAttributes), requestNewLine: requestNewLine))
+            }
+            
+            for component in element.components {
+                let componentResult = buildDocumentResult(from: component, url: url, attributes: newAttributes, requestNewLine: requestNewLine)
+                result.append(contentsOf: componentResult.elements)
+                requestNewLine = componentResult.requestNewLine
+            }
+            
+            
+            return BuildDocumentResult(elements: result, requestNewLine: isBlock || requestNewLine)
+            
+//            return result + element.components.flatMap { buildDocumentResult(from: $0, url: url, attributes: newAttributes)}
         }
     }
     
-    private func apply(css: CSSParser.Result, to element: HTMLComponent.Element, currentAttributes: DocumentResult.Element.Attributes) -> DocumentResult.Element.Attributes {
+    // TODO: Add ancestors and previous siblings
+    private func apply(css: CSSParserResult, to entity: CSSEntity, currentAttributes: DocumentResult.Element.Attributes) -> DocumentResult.Element.Attributes {
         var result = currentAttributes
         
-        let classes = Set((element.attributes["class"] ?? "").components(separatedBy: " ").map({ String($0) }))
-        let properties = css.match(element: element.name, classes: classes, id: element.attributes["id"])
+        let properties = css.match(entity: entity, ancestors: [], previousSiblings: [])
         for (key, value) in properties {
             switch key {
             case .textAlign:
@@ -123,11 +119,38 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
             case .height:
                 guard let height = CSSNumericValue(string: value) else { continue }
                 result.height = height
-//            case .fontStyle:
-                
+            case .display:
+                guard let display = CSSDisplay(rawValue: value.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()) else { continue }
+                result.display = display
             default:
                 break
             }
+        }
+        
+        return result
+    }
+    
+    private func apply(htmlAttributes: [String: String], to attributes: DocumentResult.Element.Attributes) -> DocumentResult.Element.Attributes {
+        var result = attributes
+        
+        if let width = htmlAttributes["width"], let widthValue = CSSNumericValue(string: width) {
+            result.width = widthValue
+        }
+        
+        if let height = htmlAttributes["height"], let heightValue = CSSNumericValue(string: height) {
+            result.height = heightValue
+        }
+        
+        if let href = htmlAttributes["href"] {
+            result.href = href
+        }
+        
+        if let alt = htmlAttributes["alt"] {
+            result.alt = alt
+        }
+        
+        if let src = htmlAttributes["src"] {
+            result.src = src
         }
         
         return result
@@ -165,10 +188,9 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
                 break
             }
         }
-        
     }
     
-    private func loadStyle(from url: URL) -> CSSParser.Result? {
+    private func loadStyle(from url: URL) -> CSSParserResult? {
         guard styles[url] == nil else {
             return styles[url]
         }
@@ -179,5 +201,22 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
         
         styles[url] = cssResult
         return cssResult
+    }
+    
+    private func convertToDocumentElement(_ buildResult: [BuildDocumentResult.Element]) -> [DocumentResult.Element] {
+        var result = buildResult.map({ $0.element })
+        for index in 0..<buildResult.count - 1 {
+            if buildResult[index + 1].requestNewLine {
+                if case .text(let text) = result[index].elementType {
+                    result[index].elementType = .text(text + "\n")
+                }
+            }
+        }
+        return result
+    }
+    
+    private func htmlElementToCSSEntity(_ e: HTMLComponent.Element) -> CSSEntity {
+        let classes = Set((e.attributes["class"] ?? "").components(separatedBy: " ").filter({ $0.isEmpty == false }).map({ String($0) }))
+        return CSSEntity(element: e.name, classes: classes, id: e.attributes["id"])
     }
 }

@@ -234,7 +234,7 @@ class EPUBDataProviderManualParse: Loggable, EPUBDataProvider {
     
     private func paragraphStyle(for attributes: EPUBContentDocumentParser.DocumentResult.Element.Attributes) -> NSParagraphStyle? {
         let ps = NSMutableParagraphStyle()
-        ps.alignment = attributes.textAlign
+        ps.alignment = attributes.textAlign ?? .left
         return ps
     }
     
