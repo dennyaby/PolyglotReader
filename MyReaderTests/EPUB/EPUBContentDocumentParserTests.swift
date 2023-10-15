@@ -9,7 +9,6 @@ import XCTest
 @testable import MyReader
 
 final class EPUBContentDocumentParserTests: XCTestCase {
-    // TODO: Write Tests
     
     func testHtml1Text() {
         guard let url = urlFor(htmlWith: "html1") else {

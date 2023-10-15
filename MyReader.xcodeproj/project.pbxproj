@@ -41,7 +41,6 @@
 		B07780DB2AA68F1000A53EF8 /* MyReader.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B07780D92AA68F1000A53EF8 /* MyReader.xcdatamodeld */; };
 		B07780DD2AA68F1100A53EF8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B07780DC2AA68F1100A53EF8 /* Assets.xcassets */; };
 		B07780E02AA68F1100A53EF8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B07780DE2AA68F1100A53EF8 /* LaunchScreen.storyboard */; };
-		B07780EB2AA68F1100A53EF8 /* MyReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07780EA2AA68F1100A53EF8 /* MyReaderTests.swift */; };
 		B07780F52AA68F1100A53EF8 /* MyReaderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07780F42AA68F1100A53EF8 /* MyReaderUITests.swift */; };
 		B07780F72AA68F1100A53EF8 /* MyReaderUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07780F62AA68F1100A53EF8 /* MyReaderUITestsLaunchTests.swift */; };
 		B07781072AA68FAE00A53EF8 /* BookListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07781062AA68FAE00A53EF8 /* BookListViewController.swift */; };
@@ -155,7 +154,6 @@
 		B07780DF2AA68F1100A53EF8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B07780E12AA68F1100A53EF8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B07780E62AA68F1100A53EF8 /* MyReaderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyReaderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B07780EA2AA68F1100A53EF8 /* MyReaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyReaderTests.swift; sourceTree = "<group>"; };
 		B07780F02AA68F1100A53EF8 /* MyReaderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyReaderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B07780F42AA68F1100A53EF8 /* MyReaderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyReaderUITests.swift; sourceTree = "<group>"; };
 		B07780F62AA68F1100A53EF8 /* MyReaderUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyReaderUITestsLaunchTests.swift; sourceTree = "<group>"; };
@@ -385,7 +383,6 @@
 				B0FB21392AD5FEFD0086DEC1 /* CSS */,
 				B0C59D7B2ACE1C43001525B4 /* Extensions */,
 				B0C59D782ACE1B25001525B4 /* Data */,
-				B07780EA2AA68F1100A53EF8 /* MyReaderTests.swift */,
 			);
 			path = MyReaderTests;
 			sourceTree = "<group>";
@@ -860,7 +857,6 @@
 				B0FB21452AD72F070086DEC1 /* CSSFontStyleTests.swift in Sources */,
 				B0D5BAEE2ADB588F0095DF2F /* HTMLParserTests.swift in Sources */,
 				B0FB214A2AD731CE0086DEC1 /* CSSFontSizeTests.swift in Sources */,
-				B07780EB2AA68F1100A53EF8 /* MyReaderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

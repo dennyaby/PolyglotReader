@@ -56,7 +56,7 @@ final class CSSParserTests: XCTestCase {
         XCTAssertEqual(result.match(element: .div, classes: ["class1", "class3"], id: "someotherid")[.width], "450px")
     }
     
-    func testCombinatorParse() {
+    func testGroupCombinators() {
         let url = combinatorSelectorsCSSFileUrl()!
 
         let parser = CSSParser()
@@ -69,6 +69,13 @@ final class CSSParserTests: XCTestCase {
         XCTAssertEqual(result.match(classes: ["class1"])[.width], "100px")
         XCTAssertEqual(result.match(id: "id1")[.width], "100px")
         XCTAssertEqual(result.match(element: .h6)[.width], "100px")
+    }
+    
+    func testChildCombinators() {
+        let url = combinatorSelectorsCSSFileUrl()!
+
+        let parser = CSSParser()
+        let result = parser.parse(url: url)!
         
         let match1 = result.match(entity: .init(element: .a), ancestors: [.init(element: .div)], previousSiblings: [])
         XCTAssertEqual(match1[.width], "150px")
@@ -82,6 +89,57 @@ final class CSSParserTests: XCTestCase {
         
         let match4 = result.match(entity: .init(element: .p, id: "id8"), ancestors: [.init(classes: ["class3", "class1"], id: "id5"), .init(element: .div)], previousSiblings: [])
         XCTAssertNil(match4[.width])
+    }
+    
+    func testNextSiblingCombinators() {
+        let url = combinatorSelectorsCSSFileUrl()!
+
+        let parser = CSSParser()
+        let result = parser.parse(url: url)!
+
+        let match1 = result.match(entity: .init(id: "id11"), ancestors: [], previousSiblings: [.init(id: "id10")])
+        XCTAssertEqual(match1[.width], "250px")
+        XCTAssertNil(result.match(id: "id11")[.width])
+        
+        let match2 = result.match(entity: .init(element: .p), ancestors: [], previousSiblings: [.init(classes: ["class7"], id: "id10")])
+        XCTAssertEqual(match2[.width], "300px")
+        
+        let match3 = result.match(entity: .init(id: "id11"), ancestors: [], previousSiblings: [.init(id: "id10"), .init(id: "id12")])
+        XCTAssertNil(match3[.width])
+        
+        let match4 = result.match(entity: .init(id: "id11"), ancestors: [], previousSiblings: [.init(id: "id10"), .init(id: "id12")])
+        XCTAssertNil(match4[.width])
+    }
+    
+    func testSubsequentSiblingCombinators() {
+        let url = combinatorSelectorsCSSFileUrl()!
+
+        let parser = CSSParser()
+        let result = parser.parse(url: url)!
+
+        let match1 = result.match(entity: .init(element: .a), ancestors: [], previousSiblings: [.init(element: .p), .init(element: .span)])
+        XCTAssertEqual(match1[.width], "350px")
+        XCTAssertNil(result.match(element: .a)[.width])
+        
+        let match2 = result.match(entity: .init(element: .code), ancestors: [], previousSiblings: [.init(element: .p), .init(element: .span), .init(element: .a)])
+        XCTAssertNil(match2[.width])
+        
+        let match3 = result.match(entity: .init(element: .p), ancestors: [], previousSiblings: [.init(element: .span, classes: ["header"])])
+        XCTAssertEqual(match3[.width], "400px")
+    }
+    
+    func testDescendantCombinators() {
+        let url = combinatorSelectorsCSSFileUrl()!
+
+        let parser = CSSParser()
+        let result = parser.parse(url: url)!
+
+        let match1 = result.match(entity: .init(element: .span), ancestors: [.init(element: .div), .init(element: .p)], previousSiblings: [])
+        XCTAssertEqual(match1[.width], "450px")
+        XCTAssertNil(result.match(element: .span)[.width])
+        
+        let match2 = result.match(entity: .init(element: .a), ancestors: [.init(classes: ["footer"])], previousSiblings: [])
+        XCTAssertEqual(match2[.width], "500px")
     }
     
     // MARK: - Helper

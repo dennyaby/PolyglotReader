@@ -7,10 +7,10 @@
 
 import Foundation
 
-// TODO: Create and test
 enum CSSFontSize: Equatable {
     
     // MARK: - Nested Types
+    
     enum Absolute: String, Equatable {
         case xxSmall = "xx-small"
         case xSmall = "x-small"

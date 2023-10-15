@@ -25,28 +25,28 @@ struct CSSParserResult {
         for (selector, properties) in selectors {
             switch selector {
             case .all:
-                entitiesTree.set(value: properties, to: .any, classes: .any, id: .any)
+                entitiesTree.add(value: properties, for: .init())
                 break
             case .entities(let entities):
                 for entity in entities {
-                    entitiesTree.set(value: properties, for: entity)
+                    entitiesTree.add(value: properties, for: entity)
                 }
                 break
             case .child(let parent, let child):
                 var subtree = childEntitiesTree.value(for: parent) ?? CSSTree()
-                subtree.set(value: properties, for: child)
+                subtree.add(value: properties, for: child)
                 childEntitiesTree.set(value: subtree, for: parent)
             case .descendant(let parent, let descendant):
                 var subtree = descendantEntitiesTree.value(for: parent) ?? CSSTree()
-                subtree.set(value: properties, for: descendant)
+                subtree.add(value: properties, for: descendant)
                 descendantEntitiesTree.set(value: subtree, for: parent)
             case .nextSibling(let firstSibling, let nextSibling):
                 var subtree = nextSiblingEntitiesTree.value(for: firstSibling) ?? CSSTree()
-                subtree.set(value: properties, for: nextSibling)
+                subtree.add(value: properties, for: nextSibling)
                 nextSiblingEntitiesTree.set(value: subtree, for: firstSibling)
             case .subsequentSibling(let firstSibling, let subsequentSibling):
                 var subtree = subsequentSiblingEntitiesTree.value(for: firstSibling) ?? CSSTree()
-                subtree.set(value: properties, for: subsequentSibling)
+                subtree.add(value: properties, for: subsequentSibling)
                 subsequentSiblingEntitiesTree.set(value: subtree, for: firstSibling)
             }
         }

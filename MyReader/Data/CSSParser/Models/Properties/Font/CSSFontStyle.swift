@@ -7,8 +7,6 @@
 
 import Foundation
 
-// TODO: Write tests
-
 enum CSSFontStyle: Equatable {
     
     // MARK: - Nested Types

@@ -145,3 +145,12 @@ struct CSSTree<PropertyType> {
         return CSSSpecifity(element: element, classes: classes, id: id)
     }
 }
+
+extension CSSTree where PropertyType == CSSParser.Properties {
+    
+    mutating func add(value: PropertyType, for entity: CSSEntity) {
+        var current = self.value(for: entity) ?? [:]
+        let new = current.merging(value, uniquingKeysWith: { _, last in last })
+        set(value: new, for: entity)
+    }
+}
