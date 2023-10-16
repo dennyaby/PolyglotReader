@@ -40,6 +40,7 @@ enum HTMLElement: String, Hashable {
     case variable = "var"
     case html
     case title
+    case pre
     case unknown
     
     // MARK: - Init

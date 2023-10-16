@@ -30,11 +30,7 @@ final class CSSFontSizeTests: XCTestCase {
         XCTAssertEqual(CSSFontSize(string: "25pt"), .numeric(.pt(25)))
         XCTAssertEqual(CSSFontSize(string: "1.2em"), .numeric(.em(1.2)))
         XCTAssertEqual(CSSFontSize(string: "20px"), .numeric(.px(20)))
-    }
-    
-    func testPercentValues() {
-        XCTAssertEqual(CSSFontSize(string: "250%"), .percent(250))
-        XCTAssertEqual(CSSFontSize(string: "11.5%"), .percent(11.5))
+        XCTAssertEqual(CSSFontSize(string: "250%"), .numeric(.percent(250)))
     }
     
     func testInvalidValues() {

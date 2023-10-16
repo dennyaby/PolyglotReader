@@ -13,6 +13,11 @@ enum CSSNumericValue: Hashable {
     case px(CGFloat)
     case em(CGFloat)
     case pt(CGFloat)
+    case percent(CGFloat)
+    
+    static var zero: CSSNumericValue {
+        return .px(0)
+    }
     
     // MARK: - Properties
     
@@ -45,7 +50,15 @@ enum CSSNumericValue: Hashable {
             if let doubleValue = Double(string) {
                 self = .px(CGFloat(doubleValue))
             } else {
-                return nil
+                if string.last == "%" {
+                    if let doubleValue = Double(string.dropLast()) {
+                        self = .percent(CGFloat(doubleValue))
+                    } else {
+                        return nil
+                    }
+                } else {
+                    return nil
+                }
             }
         }
     }
@@ -57,6 +70,7 @@ enum CSSNumericValue: Hashable {
         case .pt(let pt): return pt
         case .px(let px): return px
         case .em(let em): return fontSize * em
+        case .percent(let percent): return percent * fontSize / 100 // TODO: No sense
         }
     }
     
@@ -67,6 +81,7 @@ enum CSSNumericValue: Hashable {
         case .em(let em): return .em(em * rhs)
         case .px(let px): return .px(px * rhs)
         case .pt(let pt): return .pt(pt * rhs)
+        case .percent(let percent): return .percent(percent * rhs)
         }
     }
     
@@ -75,6 +90,7 @@ enum CSSNumericValue: Hashable {
         case .em(let em): return .em(em / rhs)
         case .px(let px): return .px(px / rhs)
         case .pt(let pt): return .pt(pt / rhs)
+        case .percent(let percent): return .percent(percent / rhs)
         }
     }
 }

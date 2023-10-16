@@ -33,6 +33,10 @@
 		B01D7B6E2ABE20D200677F29 /* ReaderCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01D7B6D2ABE20D200677F29 /* ReaderCollectionView.swift */; };
 		B01D7B752ABF8D0C00677F29 /* CSSParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B01D7B742ABF8D0C00677F29 /* CSSParser.swift */; };
 		B0317FF22AD9540500613D63 /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = B0317FF12AD9540500613D63 /* Zip */; };
+		B04FBBC52ADDDA5C0074B9E6 /* HTMLComponentElement+CSSEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04FBBC42ADDDA5C0074B9E6 /* HTMLComponentElement+CSSEntity.swift */; };
+		B04FBBCA2ADDF0930074B9E6 /* CSSInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04FBBC92ADDF0930074B9E6 /* CSSInsets.swift */; };
+		B04FBBCC2ADDF3CB0074B9E6 /* CSSInsetsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04FBBCB2ADDF3CB0074B9E6 /* CSSInsetsTests.swift */; };
+		B04FBBCE2ADDF6FF0074B9E6 /* EPUBContentDocumentAttributesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04FBBCD2ADDF6FF0074B9E6 /* EPUBContentDocumentAttributesManager.swift */; };
 		B05861842AD4A38600800359 /* base.css in Resources */ = {isa = PBXBuildFile; fileRef = B05861832AD4A38600800359 /* base.css */; };
 		B05861862AD4A43B00800359 /* CSSFontStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05861852AD4A43B00800359 /* CSSFontStyle.swift */; };
 		B05861882AD4A52900800359 /* CSSFontWeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05861872AD4A52900800359 /* CSSFontWeight.swift */; };
@@ -143,6 +147,10 @@
 		B01D7B6B2ABE209300677F29 /* ReaderCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderCollectionViewCell.swift; sourceTree = "<group>"; };
 		B01D7B6D2ABE20D200677F29 /* ReaderCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderCollectionView.swift; sourceTree = "<group>"; };
 		B01D7B742ABF8D0C00677F29 /* CSSParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSParser.swift; sourceTree = "<group>"; };
+		B04FBBC42ADDDA5C0074B9E6 /* HTMLComponentElement+CSSEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTMLComponentElement+CSSEntity.swift"; sourceTree = "<group>"; };
+		B04FBBC92ADDF0930074B9E6 /* CSSInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSInsets.swift; sourceTree = "<group>"; };
+		B04FBBCB2ADDF3CB0074B9E6 /* CSSInsetsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSInsetsTests.swift; sourceTree = "<group>"; };
+		B04FBBCD2ADDF6FF0074B9E6 /* EPUBContentDocumentAttributesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPUBContentDocumentAttributesManager.swift; sourceTree = "<group>"; };
 		B05861832AD4A38600800359 /* base.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = base.css; sourceTree = "<group>"; };
 		B05861852AD4A43B00800359 /* CSSFontStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSFontStyle.swift; sourceTree = "<group>"; };
 		B05861872AD4A52900800359 /* CSSFontWeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSFontWeight.swift; sourceTree = "<group>"; };
@@ -263,12 +271,11 @@
 		B01D7AFF2AAFC6ED00677F29 /* EPUBParser */ = {
 			isa = PBXGroup;
 			children = (
-				B0C59D752ACCB9BE001525B4 /* Models */,
+				B04FBBC62ADDEF550074B9E6 /* EPUBContentDocumentParser */,
 				B01D7AE92AABCB7600677F29 /* EPUBParser.swift */,
 				B01D7B002AAFC70300677F29 /* EPUBParserXMLContainerParser.swift */,
 				B01D7B022AB0FD9A00677F29 /* EPUBParserModels.swift */,
 				B01D7B042AB11AF300677F29 /* EPUBParserOPFContainerParser.swift */,
-				B01D7B692ABDF4E200677F29 /* EPUBContentDocumentParser.swift */,
 			);
 			path = EPUBParser;
 			sourceTree = "<group>";
@@ -336,6 +343,16 @@
 				B0CB338A2AD49BB500DD5BE0 /* EPUBDataProviderManualParse.swift */,
 			);
 			path = EPUBDataProvider;
+			sourceTree = "<group>";
+		};
+		B04FBBC62ADDEF550074B9E6 /* EPUBContentDocumentParser */ = {
+			isa = PBXGroup;
+			children = (
+				B01D7B692ABDF4E200677F29 /* EPUBContentDocumentParser.swift */,
+				B0CB33922AD49E3B00DD5BE0 /* EPUBContentDocumentParserResult.swift */,
+				B04FBBCD2ADDF6FF0074B9E6 /* EPUBContentDocumentAttributesManager.swift */,
+			);
+			path = EPUBContentDocumentParser;
 			sourceTree = "<group>";
 		};
 		B07780C42AA68F1000A53EF8 = {
@@ -435,6 +452,7 @@
 				B01D7AFD2AAFC66500677F29 /* AppDateFormatters.swift */,
 				B0C59D8C2AD1A62A001525B4 /* UIColor+RGBA.swift */,
 				B0CB338C2AD49BF300DD5BE0 /* UIFontExtensions.swift */,
+				B04FBBC42ADDDA5C0074B9E6 /* HTMLComponentElement+CSSEntity.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -472,14 +490,6 @@
 				B01D7ADD2AAA7E5C00677F29 /* ScreensDoc.md */,
 			);
 			path = Docs;
-			sourceTree = "<group>";
-		};
-		B0C59D752ACCB9BE001525B4 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				B0CB33922AD49E3B00DD5BE0 /* EPUBContentDocumentParserResult.swift */,
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		B0C59D782ACE1B25001525B4 /* Data */ = {
@@ -550,6 +560,7 @@
 				B0C59D922AD2020D001525B4 /* CSSNumericValue.swift */,
 				B0FB213A2AD600480086DEC1 /* CSSGlobalValue.swift */,
 				B0D5BADA2ADB32C30095DF2F /* CSSDisplay.swift */,
+				B04FBBC92ADDF0930074B9E6 /* CSSInsets.swift */,
 			);
 			path = Properties;
 			sourceTree = "<group>";
@@ -574,6 +585,7 @@
 				B0FB21492AD731CE0086DEC1 /* CSSFontSizeTests.swift */,
 				B0FB214B2AD74D240086DEC1 /* CSSFontTests.swift */,
 				B0C59D902AD1FC7D001525B4 /* CSSTextAlignTests.swift */,
+				B04FBBCB2ADDF3CB0074B9E6 /* CSSInsetsTests.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -786,7 +798,9 @@
 				B07781112AA6921000A53EF8 /* BookListCollectionViewDataSource.swift in Sources */,
 				B01D7AE52AABBF5000677F29 /* BookImportManager.swift in Sources */,
 				B01D7B032AB0FD9A00677F29 /* EPUBParserModels.swift in Sources */,
+				B04FBBCA2ADDF0930074B9E6 /* CSSInsets.swift in Sources */,
 				B0D3BC1C2ADC7529002F6972 /* CSSTree.swift in Sources */,
+				B04FBBC52ADDDA5C0074B9E6 /* HTMLComponentElement+CSSEntity.swift in Sources */,
 				B01D7B6A2ABDF4E200677F29 /* EPUBContentDocumentParser.swift in Sources */,
 				B01D7AFC2AAFC53C00677F29 /* SharedDateFormatter.swift in Sources */,
 				B0CB33952AD49E7C00DD5BE0 /* HTMLElementType.swift in Sources */,
@@ -813,6 +827,7 @@
 				B01D7B1D2AB62B2700677F29 /* BookListCollectionViewCell.swift in Sources */,
 				B0D3BC182ADC6EFC002F6972 /* CSSEntity.swift in Sources */,
 				B07781072AA68FAE00A53EF8 /* BookListViewController.swift in Sources */,
+				B04FBBCE2ADDF6FF0074B9E6 /* EPUBContentDocumentAttributesManager.swift in Sources */,
 				B01D7B212AB630EB00677F29 /* BookListCoverImageCache.swift in Sources */,
 				B01D7B142AB5238100677F29 /* DataStorateInitializationManager.swift in Sources */,
 				B07780DB2AA68F1000A53EF8 /* MyReader.xcdatamodeld in Sources */,
@@ -847,6 +862,7 @@
 				B0FB213F2AD602880086DEC1 /* CSSFontFamilyTests.swift in Sources */,
 				B0C59D912AD1FC7D001525B4 /* CSSTextAlignTests.swift in Sources */,
 				B0D5BADE2ADB51530095DF2F /* EPUBContentDocumentParserTests.swift in Sources */,
+				B04FBBCC2ADDF3CB0074B9E6 /* CSSInsetsTests.swift in Sources */,
 				B0FB21412AD605930086DEC1 /* CSSFontWeightTests.swift in Sources */,
 				B0FB213D2AD6008D0086DEC1 /* CSSGlobalValueTests.swift in Sources */,
 				B0FB214C2AD74D240086DEC1 /* CSSFontTests.swift in Sources */,

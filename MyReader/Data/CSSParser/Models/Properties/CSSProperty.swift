@@ -23,6 +23,7 @@ enum CSSProperty: String, Hashable {
     case fontWeight = "font-weight"
     case fontFamily = "font-family"
     case fontVariant = "font-variant"
+    case font = "font"
     case lineHeight = "line-height"
     case backgroundColor = "background-color"
     case opacity = "opacity"

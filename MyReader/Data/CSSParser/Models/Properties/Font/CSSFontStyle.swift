@@ -22,6 +22,15 @@ enum CSSFontStyle: Equatable {
     case global(CSSGlobalValue)
     case style(Style)
     
+    // MARK: - Computed properties
+    
+    var isItalic: Bool {
+        switch self {
+        case .global(_): return false
+        case .style(let style): return style != .normal
+        }
+    }
+    
     // MARK: - Init
     
     init?(string: String, useGlobalValue: Bool = true) {

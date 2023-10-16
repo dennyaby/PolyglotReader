@@ -32,7 +32,6 @@ enum CSSFontSize: Equatable {
     case absolute(Absolute)
     case relative(Relative)
     case numeric(CSSNumericValue)
-    case percent(CGFloat)
     case global(CSSGlobalValue)
     
     // MARK: - Init
@@ -46,15 +45,10 @@ enum CSSFontSize: Equatable {
             self = .relative(relative)
         } else if let numeric = CSSNumericValue(string: normalized) {
             self = .numeric(numeric)
+        } else if useGlobalValue, let global = CSSGlobalValue(rawValue: normalized) {
+            self = .global(global)
         } else {
-            if normalized.firstIndex(of: "%") == normalized.index(before: normalized.endIndex),
-               let percentValue = Double(normalized.dropLast(1)) {
-                self = .percent(CGFloat(percentValue))
-            } else if useGlobalValue, let global = CSSGlobalValue(rawValue: normalized) {
-                self = .global(global)
-            } else {
-                return nil
-            }
+            return nil   
         }
     }
 }

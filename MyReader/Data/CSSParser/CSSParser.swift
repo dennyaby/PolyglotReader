@@ -17,6 +17,10 @@ final class CSSParser {
         return try? NSRegularExpression(pattern: "([^\\{^\\}]+)\\{([^\\}]*)\\}")
     }()
     
+    static let commentsRegularExpression: NSRegularExpression? = {
+        return try? NSRegularExpression(pattern: "(\\/\\*[^\\*\\/]*\\*\\/)|(\\/\\/.*)")
+    }()
+    
     static let propertiesRegularExpression: NSRegularExpression? = {
         return try? NSRegularExpression(pattern: "([a-z-]*)[\\s]*:[\\s]*(.*);")
     }()
@@ -57,6 +61,8 @@ final class CSSParser {
             return nil
         }
         
+        let string = removeComments(from: string)
+        
         let range = NSRange(string.startIndex..<string.endIndex, in: string)
         
         var selectors: [CSSSelector: Properties] = [:]
@@ -67,7 +73,7 @@ final class CSSParser {
             
             guard let selectorRange = Range(match.range(at: 1), in: string) else { return }
             let selectorString = String(string[selectorRange])
-            let selector = self.selector(from: selectorString)
+            guard let selector = self.selector(from: selectorString) else { return }
             
             guard let bodyRange = Range(match.range(at: 2), in: string) else { return }
             let body = String(string[bodyRange])
@@ -81,11 +87,15 @@ final class CSSParser {
     
     // MARK: - Helper
     
-    private func selector(from string: String) -> CSSSelector {
+    private func selector(from string: String) -> CSSSelector? {
         let normalized = string.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         if normalized == "*" {
             return .all
         }
+        if normalized.starts(with: "@") {
+            return nil
+        }
+        
         
         let entities = normalized.components(separatedBy: ",").map({ $0.trimmingCharacters(in: .whitespacesAndNewlines)})
         if entities.count > 1 {
@@ -122,7 +132,6 @@ final class CSSParser {
             return .entities([cssEntity(from: normalized)])
         }
     }
-    
     
     private func cssEntity(from string: String) -> CSSEntity {
         var element: HTMLElement?
@@ -171,5 +180,13 @@ final class CSSParser {
         }
         
         return result
+    }
+    
+    private func removeComments(from string: String) -> String {
+        guard let regexp = Self.commentsRegularExpression else {
+            return string
+        }
+        
+        return regexp.stringByReplacingMatches(in: string, range: NSRange(string.startIndex..<string.endIndex, in: string), withTemplate: "")
     }
 }

@@ -33,7 +33,13 @@ final class CSSNumericValueTests: XCTestCase {
             XCTFail("Unable to init from string '0'")
             return
         }
-        XCTAssertEqual(zero, .px(0))
+        XCTAssertEqual(zero, .zero)
+        
+        guard let percentValue = CSSNumericValue(string: "10%") else {
+            XCTFail("Unable to init from string '10%'")
+            return
+        }
+        XCTAssertEqual(percentValue, .percent(10))
         
         XCTAssertNil(CSSNumericValue(string: "asf"))
         XCTAssertNil(CSSNumericValue(string: "15pxem"))
