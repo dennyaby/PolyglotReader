@@ -68,7 +68,7 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
             if pageSize != self.pageSize {
                 self.pageSize = pageSize
                 
-                reloadBookLayout(from: epubDataProvider.bookContents(userTextSettings: .init(fontMultiplier: 1), pageSize: pageSize))
+                reloadBookLayout(from: epubDataProvider.bookContents(config: .standard, pageSize: pageSize))
                 collectionView.reloadData()
             }
         }

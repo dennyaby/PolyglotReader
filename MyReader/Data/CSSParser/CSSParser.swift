@@ -66,6 +66,7 @@ final class CSSParser {
         let range = NSRange(string.startIndex..<string.endIndex, in: string)
         
         var selectors: [CSSSelector: Properties] = [:]
+        var fontFaces: [CSSParserResult.FontFace] = []
         
         selectorRegExp.enumerateMatches(in: string, options: [], range: range) { match, _, stop in
             guard let match = match else { return }
@@ -79,10 +80,18 @@ final class CSSParser {
             let body = String(string[bodyRange])
             
             let properties = self.bodyValues(from: body, regex: propertyRegExp)
-            selectors[selector] = properties
+            switch selector {
+            case .fontFace:
+                if let fontFace = CSSParserResult.FontFace(from: properties) {
+                    fontFaces.append(fontFace)
+                }
+            default:
+                selectors[selector] = properties
+            }
+
         }
         
-        return CSSParserResult(selectors: selectors)
+        return CSSParserResult(selectors: selectors, fontFaces: fontFaces)
     }
     
     // MARK: - Helper
@@ -92,8 +101,8 @@ final class CSSParser {
         if normalized == "*" {
             return .all
         }
-        if normalized.starts(with: "@") {
-            return nil
+        if normalized.starts(with: "@font-face") {
+            return .fontFace
         }
         
         

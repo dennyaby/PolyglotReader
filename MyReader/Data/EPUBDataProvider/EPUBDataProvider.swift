@@ -16,10 +16,6 @@ struct EPUBDataProviderConfig {
     static let standard = EPUBDataProviderConfig(fontSize: 20, textColor: .black)
 }
 
-struct EPUBDataProviderUserSettings {
-    let fontMultiplier: CGFloat
-}
-
 struct EPUBDataProviderResult {
     let attributedString: NSAttributedString
     let images: [EPUBDataProvderImageInfo]
@@ -36,6 +32,6 @@ protocol EPUBDataProvider {
     
     init?(appManager: AppManager, book: Book, config: EPUBDataProviderConfig)
     
-    func bookContents(userTextSettings: EPUBDataProviderUserSettings, pageSize: CGSize) -> [EPUBDataProviderResult]
+    func bookContents(config: EPUBDataProviderConfig, pageSize: CGSize) -> [EPUBDataProviderResult]
     func image(for url: URL) -> UIImage?
 }

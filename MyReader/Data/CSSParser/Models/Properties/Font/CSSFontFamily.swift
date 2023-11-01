@@ -7,11 +7,11 @@
 
 import Foundation
 
-enum CSSFontFamily: Equatable {
+enum CSSFontFamily: Hashable {
     
     // MARK: - Nested Types
     
-    enum GenericFontFamily: String, Equatable {
+    enum GenericFontFamily: String, Hashable {
         case serif
         case sansSerif = "sans-serif"
         case monospace
@@ -27,7 +27,7 @@ enum CSSFontFamily: Equatable {
         case fangsong
     }
     
-    enum FontFamily: Equatable {
+    enum FontFamily: Hashable {
         case generic(GenericFontFamily)
         case specific(String)
     }

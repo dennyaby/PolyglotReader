@@ -9,6 +9,9 @@ import Foundation
 
 enum CSSFontWeight: Equatable {
     
+    static let normal = 400
+    static let bold = 700
+    
     // MARK: - Nested Types
     
     enum RelativeWeight: String, Equatable {
@@ -32,9 +35,9 @@ enum CSSFontWeight: Equatable {
         } else {
             var boldness: Int?
             if normalized == "normal" {
-                boldness = 400
+                boldness = Self.normal
             } else if normalized == "bold" {
-                boldness = 700
+                boldness = Self.bold
             } else {
                 boldness = Int(normalized)
             }

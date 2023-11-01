@@ -19,6 +19,7 @@ class EPUBDataProviderManualParse: Loggable, EPUBDataProvider {
     private struct Document {
         let url: URL
         let content: Content
+        let fontFaces: [CSSParserResult.FontFace]
     }
     
     private enum ImageSize {
@@ -85,8 +86,8 @@ class EPUBDataProviderManualParse: Loggable, EPUBDataProvider {
     
     // MARK: - Interface
     
-    func bookContents(userTextSettings: EPUBDataProviderUserSettings, pageSize: CGSize) -> [EPUBDataProviderResult] {
-        return parseBookContentIfNeeded().map({ mapDocumentToResult($0, userSettings: userTextSettings, pageSize: pageSize)})
+    func bookContents(config: EPUBDataProviderConfig, pageSize: CGSize) -> [EPUBDataProviderResult] {
+        return parseBookContentIfNeeded().map({ mapDocumentToResult($0, config: config, pageSize: pageSize)})
     }
     
     func image(for url: URL) -> UIImage? {
@@ -117,7 +118,7 @@ class EPUBDataProviderManualParse: Loggable, EPUBDataProvider {
                     let url = baseBookURL.appendingPathComponent(manifest.href)
                     
                     guard let content = parser.parse(url: url) else { continue }
-                    documents.append(.init(url: url, content: content))
+                    documents.append(.init(url: url, content: content, fontFaces: content.fontFaces))
                 default:
                     break
                 }
@@ -126,8 +127,9 @@ class EPUBDataProviderManualParse: Loggable, EPUBDataProvider {
         return documents
     }
     
-    private func mapDocumentToResult(_ document: Document, userSettings: EPUBDataProviderUserSettings, pageSize: CGSize) -> EPUBDataProviderResult {
-        // TODO: Apply settings
+    private func mapDocumentToResult(_ document: Document, config: EPUBDataProviderConfig, pageSize: CGSize) -> EPUBDataProviderResult {
+        fontManager.startNewDocument(fontFaces: document.fontFaces, config: config, pageSize: pageSize)
+        
         let resultString = NSMutableAttributedString()
         var images: [EPUBDataProvderImageInfo] = []
         
@@ -136,7 +138,7 @@ class EPUBDataProviderManualParse: Loggable, EPUBDataProvider {
             case .text(let text):
                 var attributes: [NSAttributedString.Key: Any] = [:]
                 
-                let font = fontManager.generateFont(for: element.attributes, pageSize: pageSize, config: config)
+                let font = fontManager.generateFont(for: element.attributes)
                 let paragraphStyle = paragraphStyleManager.generateParagraphStyle(for: element.attributes, fontSize: font.fontSize, pageSize: pageSize, config: config)
                 
                 attributes[.font] = font.uiFont
@@ -267,9 +269,19 @@ extension EPUBDataProviderManualParse {
             let uiFont: UIFont
         }
         
+        // MARK: - Properties
+        
+        private var config: EPUBDataProviderConfig?
+        private var pageSize: CGSize?
+        private var fontFaces: [CSSParserResult.FontFace] = []
+        
         // MARK: - Interface
         
-        func generateFont(for attributes: Attributes, pageSize: CGSize, config: EPUBDataProviderConfig) -> Result {
+        func generateFont(for attributes: Attributes) -> Result {
+            guard let config = config, let pageSize = pageSize else {
+                return .init(fontSize: 16, uiFont: .systemFont(ofSize: 16))
+            }
+            
             var traits: UIFontDescriptor.SymbolicTraits = []
             if let fontStyle = attributes.fontStyle, fontStyle.isItalic {
                 traits.insert(.traitItalic)
@@ -327,10 +339,18 @@ extension EPUBDataProviderManualParse {
                     }
                 }
             }
-            // TODO: Solve problem with Weight
-            
-            let uiFont = UIFont.systemFont(ofSize: baseSize, weight: .init((weight - 400) / 400)).with(traits: traits)
+            // TODO: Solve problem with italic. When applying traits, weight disappears. Actually make fonts finished, complete this part of the app with ability to make font bigger or smaller.
+            let uiFont = UIFont.systemFont(ofSize: baseSize, weight: .init(value: weight))
+//                .with(traits: traits)
             return .init(fontSize: baseSize, uiFont: uiFont)
+        }
+        
+        func startNewDocument(fontFaces: [CSSParserResult.FontFace], config: EPUBDataProviderConfig, pageSize: CGSize) {
+            self.config = config
+            self.pageSize = pageSize
+            self.fontFaces = fontFaces
+            
+            // TODO: Font faces - what to do? We need cache?
         }
     }
 }

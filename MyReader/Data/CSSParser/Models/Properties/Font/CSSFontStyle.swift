@@ -7,11 +7,11 @@
 
 import Foundation
 
-enum CSSFontStyle: Equatable {
+enum CSSFontStyle: Hashable {
     
     // MARK: - Nested Types
     
-    enum Style: String, Equatable {
+    enum Style: String, Hashable {
         case normal
         case italic
         case oblique

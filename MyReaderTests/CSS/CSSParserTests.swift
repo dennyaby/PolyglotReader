@@ -142,6 +142,83 @@ final class CSSParserTests: XCTestCase {
         XCTAssertEqual(match2[.width], "500px")
     }
     
+    func testFontFaceRules() {
+        let url = fontFacesCSSFileUrl()!
+        
+        let parser = CSSParser()
+        let result = parser.parse(url: url)!
+        
+        let match1 = result.match(element: .body)
+        XCTAssertEqual(match1[.fontSize], "medium")
+        XCTAssertEqual(match1[.fontFamily], "Charis")
+        XCTAssertEqual(match1[.marginRight], "2em")
+        
+        let match2 = result.match(element: .p)
+        XCTAssertNil(match2[.fontSize])
+        XCTAssertNil(match2[.fontFamily])
+    
+        
+        XCTAssertEqual(result.fontFaces.count, 4)
+        
+        let charis1 = result.fontFaces.first(where: { $0.family.name() == "Charis1"})
+        XCTAssertNotNil(charis1)
+        XCTAssertEqual(charis1?.fontStyle, CSSFontStyle.style(.normal))
+        XCTAssertEqual(charis1?.weight, .specific(100))
+        XCTAssertEqual(charis1?.maxWeight, .specific(400))
+        XCTAssertEqual(charis1?.weightRange, 100...400)
+        XCTAssertEqual(charis1?.src.count, 2)
+        
+        let charis1Src1 = charis1!.src[0]
+        XCTAssertEqual(charis1Src1.sourceType, .local)
+        XCTAssertEqual(charis1Src1.path, "CharisSILR")
+        
+        let charis1Src2 = charis1!.src[1]
+        XCTAssertEqual(charis1Src2.sourceType, .url)
+        XCTAssertEqual(charis1Src2.path, "fonts/CharisSILR.ttf")
+        
+        
+        
+        let charis2 = result.fontFaces.first(where: { $0.family.name() == "Charis2" })
+        XCTAssertNotNil(charis2)
+        XCTAssertEqual(charis2?.fontStyle, .style(.normal))
+        XCTAssertEqual(charis2?.weight, .specific(CSSFontWeight.bold))
+        XCTAssertNil(charis2?.maxWeight)
+        XCTAssertEqual(charis2?.weightRange, CSSFontWeight.bold...CSSFontWeight.bold)
+        XCTAssertEqual(charis2?.src.count, 1)
+        
+        let charis2Src = charis2!.src[0]
+        XCTAssertEqual(charis2Src.sourceType, .url)
+        XCTAssertEqual(charis2Src.path, "fonts/CharisSILB.ttf")
+        
+        
+        
+        let charis3 = result.fontFaces.first(where: { $0.family.name() == "Charis3" })
+        XCTAssertNotNil(charis3)
+        XCTAssertEqual(charis3?.fontStyle, .style(.italic))
+        XCTAssertEqual(charis3?.weight, .specific(CSSFontWeight.normal))
+        XCTAssertNil(charis3?.maxWeight)
+        XCTAssertEqual(charis3?.weightRange, CSSFontWeight.normal...CSSFontWeight.normal)
+        XCTAssertEqual(charis3?.src.count, 1)
+        
+        let charis3Src = charis3!.src[0]
+        XCTAssertEqual(charis3Src.sourceType, .local)
+        XCTAssertEqual(charis3Src.path, "CharisSILI")
+        
+        
+        
+        let charis4 = result.fontFaces.first(where: { $0.family.name() == "Charis4" })
+        XCTAssertNotNil(charis4)
+        XCTAssertEqual(charis4?.fontStyle, .style(.italic))
+        XCTAssertEqual(charis4?.weight, .specific(CSSFontWeight.bold))
+        XCTAssertNil(charis4?.maxWeight)
+        XCTAssertEqual(charis4?.weightRange, CSSFontWeight.bold...CSSFontWeight.bold)
+        XCTAssertEqual(charis4?.src.count, 1)
+        
+        let charis4Src = charis4!.src[0]
+        XCTAssertEqual(charis4Src.sourceType, .url)
+        XCTAssertEqual(charis4Src.path, "fonts/CharisSILBI.ttf")
+    }
+    
     // MARK: - Helper
     
     private func simpleCSSFileUrl() -> URL? {
@@ -155,10 +232,33 @@ final class CSSParserTests: XCTestCase {
     private func combinatorSelectorsCSSFileUrl() -> URL? {
         return Bundle.test?.url(forResource: "combinator_selectors", withExtension: "css")
     }
+    
+    private func fontFacesCSSFileUrl() -> URL? {
+        return Bundle.test?.url(forResource: "font_faces", withExtension: "css")
+    }
 }
 
 fileprivate extension CSSParserResult {
     func match(element: HTMLElement? = nil, classes: Set<String> = [], id: String? = nil) -> Properties {
         return match(entity: .init(element: element, classes: classes, id: id))
+    }
+}
+
+fileprivate extension CSSFontFamily {
+    func name() -> String? {
+        switch self {
+        case .global(_):
+            return nil
+        case .families(let families):
+            guard let first = families.first else {
+                return nil
+            }
+            switch first {
+            case .generic(_):
+                return nil
+            case .specific(let name):
+                return name
+            }
+        }
     }
 }

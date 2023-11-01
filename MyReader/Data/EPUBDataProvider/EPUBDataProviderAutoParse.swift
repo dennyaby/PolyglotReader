@@ -72,7 +72,7 @@ class EPUBDataProviderAutoParse: Loggable, EPUBDataProvider {
     
     // MARK: - Interface
     
-    func bookContents(userTextSettings: EPUBDataProviderUserSettings, pageSize: CGSize) -> [EPUBDataProviderResult] {
+    func bookContents(config: EPUBDataProviderConfig, pageSize: CGSize) -> [EPUBDataProviderResult] {
         var strings: [NSAttributedString] = []
         var cssFiles: [URL: String] = [:]
         

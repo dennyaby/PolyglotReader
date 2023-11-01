@@ -30,7 +30,7 @@ final class CSSFontTests: XCTestCase {
         XCTAssertNil(font1.fontFamily)
         XCTAssertNil(font1.fontSize)
         XCTAssertNil(font1.fontStyle)
-        XCTAssertEqual(font1.fontWeight, .specific(700))
+        XCTAssertEqual(font1.fontWeight, .specific(CSSFontWeight.bold))
     }
     
     func testFontSizeAttribute() {
@@ -70,7 +70,7 @@ final class CSSFontTests: XCTestCase {
         
         let font2 = CSSFont(string: "italic bold 1.2em \"Fira Sans\", sans-serif")
         XCTAssertEqual(font2.fontStyle, .style(.italic))
-        XCTAssertEqual(font2.fontWeight, .specific(700))
+        XCTAssertEqual(font2.fontWeight, .specific(CSSFontWeight.bold))
         XCTAssertEqual(font2.fontSize, .numeric(.em(1.2)))
         XCTAssertEqual(font2.fontFamily, .families([.specific("Fira Sans"), .generic(.sansSerif)]))
     }

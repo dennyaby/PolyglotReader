@@ -9,6 +9,9 @@ import UIKit
 
 extension EPUBContentDocumentParser {
     struct DocumentResult {
+        
+        // MARK: - Nested Types
+        
         struct Element {
             enum ElementType {
                 case text(String)
@@ -59,6 +62,9 @@ extension EPUBContentDocumentParser {
             }
         }
         
+        // MARK: - Properties
+        
         let elements: [Element]
+        let fontFaces: [CSSParserResult.FontFace]
     }
 }

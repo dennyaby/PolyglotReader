@@ -19,9 +19,13 @@ struct CSSParserResult {
     private var nextSiblingEntitiesTree: CSSTree<CSSTree<Properties>> = .init()
     private var subsequentSiblingEntitiesTree: CSSTree<CSSTree<Properties>> = .init()
     
+    let fontFaces: [FontFace]
+    
     // MARK: - Init
     
-    init(selectors: [CSSSelector: Properties]) {
+    init(selectors: [CSSSelector: Properties], fontFaces: [FontFace]) {
+        self.fontFaces = fontFaces
+        
         for (selector, properties) in selectors {
             switch selector {
             case .all:
@@ -48,6 +52,8 @@ struct CSSParserResult {
                 var subtree = subsequentSiblingEntitiesTree.value(for: firstSibling) ?? CSSTree()
                 subtree.add(value: properties, for: subsequentSibling)
                 subsequentSiblingEntitiesTree.set(value: subtree, for: firstSibling)
+            default:
+                break
             }
         }
     }

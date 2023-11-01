@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum CSSGlobalValue: String, Equatable {
+enum CSSGlobalValue: String, Hashable {
     
     case inherit
     case initial

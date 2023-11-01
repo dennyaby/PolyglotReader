@@ -21,8 +21,8 @@ final class CSSFontWeightTests: XCTestCase {
     }
     
     func testSpecificValues() {
-        XCTAssertEqual(CSSFontWeight(string: "bold"), .specific(700))
-        XCTAssertEqual(CSSFontWeight(string: "normal"), .specific(400))
+        XCTAssertEqual(CSSFontWeight(string: "bold"), .specific(CSSFontWeight.bold))
+        XCTAssertEqual(CSSFontWeight(string: "normal"), .specific(CSSFontWeight.normal))
         XCTAssertEqual(CSSFontWeight(string: "950"), .specific(950))
         XCTAssertEqual(CSSFontWeight(string: "1500"), .specific(1000))
         XCTAssertEqual(CSSFontWeight(string: "-500"), .specific(1))

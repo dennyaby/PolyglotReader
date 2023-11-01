@@ -14,4 +14,5 @@ enum CSSSelector: Hashable {
     case child(CSSEntity, CSSEntity)
     case nextSibling(CSSEntity, CSSEntity)
     case subsequentSibling(CSSEntity, CSSEntity)
+    case fontFace
 }

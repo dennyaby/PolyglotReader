@@ -43,7 +43,7 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
         
         let buildDocumentResultElements = buildDocumentResult(from: component, url: url)
         let elements = convertToDocumentElement(buildDocumentResultElements.elements)
-        return DocumentResult(elements: elements)
+        return DocumentResult(elements: elements, fontFaces: style?.fontFaces ?? [])
     }
     
     // MARK: - Logic
