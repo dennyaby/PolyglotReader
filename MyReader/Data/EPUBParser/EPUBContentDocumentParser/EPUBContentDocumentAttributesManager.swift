@@ -115,6 +115,9 @@ extension EPUBContentDocumentParser {
                 case .paddingRight:
                     guard let padding = CSSNumericValue(string: value) else { continue }
                     result.paddingRight = padding
+                case .fontFamily:
+                    guard let family = CSSFontFamily(string: value) else { continue }
+                    result.fontFamily = family
                 default:
                     break
                 }

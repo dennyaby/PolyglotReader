@@ -111,7 +111,7 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
                         continue
                     }
                     
-                    let fileUrl = documentUrl.deletingLastPathComponent().appendingPathComponent(href)
+                    guard let fileUrl = URLResolver.resolveResource(path: href, linkedFrom: documentUrl) else { continue }
                     styleURLs.append(fileUrl)
                 default:
                     print("\(rel) relationship is not handled")
@@ -141,7 +141,7 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
         }
         
         let oneBigFile = filesContent.joined(separator: "\n")
-        return cssParser.parse(string: oneBigFile)
+        return cssParser.parse(string: oneBigFile, baseUrl: urls.last!) // TODO: urls.last is bad idea, it will break custom font faces for second and next style files
     }
     
     private func convertToDocumentElement(_ buildResult: [BuildDocumentResult.Element]) -> [DocumentResult.Element] {

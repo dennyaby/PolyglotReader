@@ -52,10 +52,10 @@ final class CSSParser {
             return nil
         }
         
-        return parse(string: fileString)
+        return parse(string: fileString, baseUrl: url)
     }
     
-    func parse(string: String) -> CSSParserResult? {
+    func parse(string: String, baseUrl: URL) -> CSSParserResult? {
         guard let selectorRegExp = Self.selectorsRegularExpression,
               let propertyRegExp = Self.propertiesRegularExpression else {
             return nil
@@ -82,7 +82,7 @@ final class CSSParser {
             let properties = self.bodyValues(from: body, regex: propertyRegExp)
             switch selector {
             case .fontFace:
-                if let fontFace = CSSParserResult.FontFace(from: properties) {
+                if let fontFace = CSSParserResult.FontFace(from: properties, baseUrl: baseUrl) {
                     fontFaces.append(fontFace)
                 }
             default:

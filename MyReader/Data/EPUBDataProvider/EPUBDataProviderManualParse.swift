@@ -128,7 +128,7 @@ class EPUBDataProviderManualParse: Loggable, EPUBDataProvider {
     }
     
     private func mapDocumentToResult(_ document: Document, config: EPUBDataProviderConfig, pageSize: CGSize) -> EPUBDataProviderResult {
-        fontManager.startNewDocument(fontFaces: document.fontFaces, config: config, pageSize: pageSize)
+        fontManager.startNewDocument(fontFaces: document.fontFaces, config: config)
         
         let resultString = NSMutableAttributedString()
         var images: [EPUBDataProvderImageInfo] = []
@@ -146,7 +146,7 @@ class EPUBDataProviderManualParse: Loggable, EPUBDataProvider {
                 attributes[.paragraphStyle] = paragraphStyle
                 resultString.append(NSAttributedString(string: text,attributes: attributes))
             case .image(let src):
-                guard let imageUrl = getUrl(from: src, documentURL: document.url) else { continue }
+                guard let imageUrl = URLResolver.resolveResource(path: src, linkedFrom: document.url) else { continue }
                 let logicalImageSize = getLogicalImageSize(for: imageUrl, attributes: element.attributes)
                 let imageSize = getImageSize(forLogicalImageSize: logicalImageSize, toFitInside: pageSize)
                 
@@ -244,23 +244,16 @@ class EPUBDataProviderManualParse: Loggable, EPUBDataProvider {
         let delegate = CTRunDelegateCreate(&callbacks, extentBuffer)
         return NSAttributedString(string: "\u{FFFC}", attributes: [NSAttributedString.Key(kCTRunDelegateAttributeName as String): delegate as Any])
     }
-    
-    // MARK: - Common
-    
-    // MARK: - URLs
-    
-    private func getUrl(from href: String, documentURL: URL) -> URL? {
-        let lowerPrefix = href.prefix(10).lowercased()
-        if lowerPrefix.starts(with: "http://") || lowerPrefix.starts(with: "https://") {
-            return URL(string: href)
-        } else {
-            return documentURL.deletingLastPathComponent().appendingPathComponent(href)
-        }
-    }
 }
 
 extension EPUBDataProviderManualParse {
     final class FontManager {
+        /*
+         Loop through all families. Set specific weight and italic/no italic. If not found - return system font. Eazy
+         
+         */
+        
+        static let baseFontSize: CGFloat = 16
         
         // MARK: - Nested Types
         
@@ -272,50 +265,23 @@ extension EPUBDataProviderManualParse {
         // MARK: - Properties
         
         private var config: EPUBDataProviderConfig?
-        private var pageSize: CGSize?
         private var fontFaces: [CSSParserResult.FontFace] = []
         
         // MARK: - Interface
         
         func generateFont(for attributes: Attributes) -> Result {
-            guard let config = config, let pageSize = pageSize else {
-                return .init(fontSize: 16, uiFont: .systemFont(ofSize: 16))
-            }
-            
-            var traits: UIFontDescriptor.SymbolicTraits = []
-            if let fontStyle = attributes.fontStyle, fontStyle.isItalic {
-                traits.insert(.traitItalic)
+            guard let config = config else {
+                return .init(fontSize: Self.baseFontSize, uiFont: defaultFont(with: Self.baseFontSize))
             }
             
             var baseSize = config.fontSize
             if let fontSize = attributes.fontSize {
                 switch fontSize {
                 case .absolute(let absolute):
-                    switch absolute {
-                    case .xxSmall:
-                        baseSize *= 0.3
-                    case .xSmall:
-                        baseSize *= 0.5
-                    case .small:
-                        baseSize *= 0.7
-                    case .medium:
-                        break
-                    case .large:
-                        baseSize *= 1.3
-                    case .xLarge:
-                        baseSize *= 1.7
-                    case .xxLarge:
-                        baseSize *= 2
-                    case .xxxLarge:
-                        baseSize *= 2.4
-                    }
-                case .relative(let relative):
-                    switch relative {
-                    case .larger:
-                        baseSize *= 1.3
-                    case .smaller:
-                        baseSize *= 0.7
-                    }
+                    baseSize *= absolute.multiplier
+                case .relative(_):
+                    // TODO: It shouldn't be here. It should be handled upper the line
+                    break
                 case .numeric(let value):
                     baseSize = value.pointSize(with: baseSize)
                 case .global(_):
@@ -323,34 +289,104 @@ extension EPUBDataProviderManualParse {
                 }
             }
             
-            var weight: CGFloat = 400
+            var weight: CGFloat?
             if let fontWeight = attributes.fontWeight {
                 switch fontWeight {
                 case .global(_):
                     break
                 case .specific(let value):
                     weight = CGFloat(value)
-                case .relative(let relative):
-                    switch relative {
-                    case .bolder:
-                        weight *= 1.3
-                    case .lighter:
-                        weight *= 0.7
+                case .relative(_):
+                    // TODO: It shouldn't be here. It should be handled upper the line
+                    break
+                }
+            }
+            
+            let isItalic = attributes.fontStyle?.isItalic ?? false
+            
+            
+            return .init(fontSize: baseSize, uiFont: font(for: attributes.fontFamily, baseSize: baseSize, weight: weight, isItalic: isItalic))
+        }
+        
+        func startNewDocument(fontFaces: [CSSParserResult.FontFace], config: EPUBDataProviderConfig) {
+            self.config = config
+            self.fontFaces = fontFaces
+            
+            for fontFace in fontFaces {
+                for source in fontFace.src {
+                    do {
+                        try FontRegisterManager.registerFontIfNeeded(url: source.url, by: fontFace.family.name())
+                        print("Font has been registered")
+                    } catch {
+                        print("Error registering a font: \(error)")
                     }
                 }
             }
-            // TODO: Solve problem with italic. When applying traits, weight disappears. Actually make fonts finished, complete this part of the app with ability to make font bigger or smaller.
-            let uiFont = UIFont.systemFont(ofSize: baseSize, weight: .init(value: weight))
-//                .with(traits: traits)
-            return .init(fontSize: baseSize, uiFont: uiFont)
         }
         
-        func startNewDocument(fontFaces: [CSSParserResult.FontFace], config: EPUBDataProviderConfig, pageSize: CGSize) {
-            self.config = config
-            self.pageSize = pageSize
-            self.fontFaces = fontFaces
+        // MARK: - Helper
+        
+        private func font(for family: CSSFontFamily?, baseSize: CGFloat, weight: CGFloat?, isItalic: Bool) -> UIFont {
+            var fontWeight: UIFont.Weight = .regular
             
-            // TODO: Font faces - what to do? We need cache?
+            var traits: [UIFontDescriptor.TraitKey: Any] = [:]
+            if let weight = weight {
+                fontWeight = UIFont.Weight(value: weight)
+                traits[.weight] = fontWeight.rawValue
+            }
+            if isItalic {
+                traits[.symbolic] = UIFontDescriptor.SymbolicTraits.traitItalic.rawValue
+            }
+            
+            var font: UIFont?
+            if let family = family {
+                switch family {
+                case .families(let families):
+                    guard let family = families.first else { break }
+                    
+                    switch family {
+                    case .specific(let familyName):
+                        let realFamilyName = FontRegisterManager.getRealFamilyName(for: familyName)
+                        let fontDescriptor = UIFontDescriptor().withFamily(realFamilyName).addingAttributes([.traits: traits])
+                        
+                        font = UIFont(descriptor: fontDescriptor, size: baseSize)
+                    case .generic(let genericFamilyName):
+                        switch genericFamilyName {
+                        case .monospace, .uiMonospace:
+                            font = UIFont.monospacedSystemFont(ofSize: baseSize, weight: fontWeight)
+                        case .uiRounded:
+                            if let fontDescriptor = UIFontDescriptor().withDesign(.rounded)?.addingAttributes([.traits: traits]) {
+                                font = UIFont(descriptor: fontDescriptor, size: baseSize)
+                            }
+                        case .serif, .uiSerif:
+                            if let fontDescriptor = UIFontDescriptor().withDesign(.serif)?.addingAttributes([.traits: traits]) {
+                                font = UIFont(descriptor: fontDescriptor, size: baseSize)
+                            }
+                        case .emoji, .fangsong, .math, .systemUI, .sansSerif, .uiSanfSerif:
+                            let fontDescriptor = UIFontDescriptor().addingAttributes([.traits: traits])
+                            font = UIFont(descriptor: fontDescriptor, size: baseSize)
+                        case .cursive:
+                            let fontDescriptor = UIFontDescriptor().withFamily("Zapfino").addingAttributes([.traits: traits])
+                            font = UIFont(descriptor: fontDescriptor, size: baseSize)
+                        case .fantasy:
+                            let fontDescriptor = UIFontDescriptor().withFamily("Party LET").addingAttributes([.traits: traits])
+                            font = UIFont(descriptor: fontDescriptor, size: baseSize)
+                        }
+                    }
+                default:
+                    break
+                }
+            }
+            if let font = font {
+                return font
+            } else {
+                let fontDescriptor = UIFontDescriptor().addingAttributes([.traits: traits])
+                return UIFont(descriptor: fontDescriptor, size: baseSize)
+            }
+        }
+        
+        private func defaultFont(with size: CGFloat) -> UIFont {
+            return .systemFont(ofSize: size)
         }
     }
 }
@@ -372,7 +408,7 @@ extension EPUBDataProviderManualParse {
             ps.firstLineHeadIndent = ps.firstLineHeadIndent + headIndent
             ps.headIndent = headIndent
             
-            // TODO: I dont like that spacing between letters is different.
+            // TODO: I dont like that spacing between letters is different. And there are no hypens -
             
             return ps
         }

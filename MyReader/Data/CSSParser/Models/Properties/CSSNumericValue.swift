@@ -10,6 +10,7 @@ import UIKit.UIScreen
 
 enum CSSNumericValue: Hashable {
     
+    // TODO: Add rem value support
     case px(CGFloat)
     case em(CGFloat)
     case pt(CGFloat)
@@ -18,8 +19,6 @@ enum CSSNumericValue: Hashable {
     static var zero: CSSNumericValue {
         return .px(0)
     }
-    
-    // MARK: - Properties
     
     // MARK: - Init
     

@@ -19,7 +19,7 @@ extension CSSParserResult {
             }
             
             let sourceType: SourceType
-            let path: String
+            let url: URL
         }
         
         // MARK: - Properties
@@ -34,7 +34,7 @@ extension CSSParserResult {
         
         // MARK: - Init
         
-        init?(from: [CSSProperty: String]) {
+        init?(from: [CSSProperty: String], baseUrl: URL) {
             guard let familyProperty = from[.fontFamily], let family = CSSFontFamily(string: familyProperty, useGlobalValue: false) else {
                 return nil
             }
@@ -43,7 +43,7 @@ extension CSSParserResult {
                 return nil
             }
             
-            let src = Self.src(from: srcProperty)
+            let src = Self.src(from: srcProperty, baseUrl: baseUrl)
             guard src.count > 0 else {
                 return nil
             }
@@ -77,7 +77,7 @@ extension CSSParserResult {
         
         // MARK: - Helper
         
-        private static func src(from string: String) -> [Source] {
+        private static func src(from string: String, baseUrl: URL) -> [Source] {
             var result: [Source] = []
             for src in string.components(separatedBy: ",").map({ $0.trimmingCharacters(in: .whitespacesAndNewlines)}) {
                 let srcComponents = src.components(separatedBy: " ").filter({ $0.isEmpty == false })
@@ -87,14 +87,16 @@ extension CSSParserResult {
                             .replacingOccurrences(of: "url(", with: "")
                             .replacingOccurrences(of: ")", with: "")
                             .replacingOccurrences(of: "\"", with: "")
-                        result.append(.init(sourceType: .url, path: path))
+                        guard let url = URLResolver.resolveResource(path: path, linkedFrom: baseUrl) else { continue }
+                        result.append(.init(sourceType: .url, url: url))
                         break
                     } else if component.starts(with: "local(") {
                         let path = component
                             .replacingOccurrences(of: "local(", with: "")
                             .replacingOccurrences(of: ")", with: "")
                             .replacingOccurrences(of: "\"", with: "")
-                        result.append(.init(sourceType: .local, path: path))
+                        guard let url = URLResolver.resolveResource(path: path, linkedFrom: baseUrl) else { continue }
+                        result.append(.init(sourceType: .local, url: url))
                         break
                     }
                 }

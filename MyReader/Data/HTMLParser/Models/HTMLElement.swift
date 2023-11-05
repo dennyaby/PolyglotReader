@@ -41,6 +41,7 @@ enum HTMLElement: String, Hashable {
     case html
     case title
     case pre
+    case meta
     case unknown
     
     // MARK: - Init

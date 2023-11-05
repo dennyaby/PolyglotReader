@@ -18,6 +18,11 @@
 16. Export notes as file, MD file, or to Notion(is it possible?).
 
 
+
+# Optional Ideas
+
+1. Add SVG support.
+
 # Technical Questions
 
 1. Should I implement reader through web view or natively?

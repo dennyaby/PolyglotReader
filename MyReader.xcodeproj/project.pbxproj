@@ -94,7 +94,7 @@
 		B0D5BAEA2ADB58640095DF2F /* html4.html in Resources */ = {isa = PBXBuildFile; fileRef = B0D5BAE52ADB58640095DF2F /* html4.html */; };
 		B0D5BAEB2ADB58640095DF2F /* html5.html in Resources */ = {isa = PBXBuildFile; fileRef = B0D5BAE62ADB58640095DF2F /* html5.html */; };
 		B0D5BAEE2ADB588F0095DF2F /* HTMLParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D5BAED2ADB588F0095DF2F /* HTMLParserTests.swift */; };
-		B0E9A2882AF16E3700770D43 /* RegisteredFontManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0E9A2872AF16E3700770D43 /* RegisteredFontManager.swift */; };
+		B0E9A2882AF16E3700770D43 /* FontRegisterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0E9A2872AF16E3700770D43 /* FontRegisterManager.swift */; };
 		B0E9A28A2AF303AD00770D43 /* URLResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0E9A2892AF303AD00770D43 /* URLResolver.swift */; };
 		B0FB21382AD5FEEC0086DEC1 /* CSSFontFamily.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FB21372AD5FEEC0086DEC1 /* CSSFontFamily.swift */; };
 		B0FB213B2AD600480086DEC1 /* CSSGlobalValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FB213A2AD600480086DEC1 /* CSSGlobalValue.swift */; };
@@ -218,7 +218,7 @@
 		B0D5BAE52ADB58640095DF2F /* html4.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = html4.html; sourceTree = "<group>"; };
 		B0D5BAE62ADB58640095DF2F /* html5.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = html5.html; sourceTree = "<group>"; };
 		B0D5BAED2ADB588F0095DF2F /* HTMLParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLParserTests.swift; sourceTree = "<group>"; };
-		B0E9A2872AF16E3700770D43 /* RegisteredFontManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisteredFontManager.swift; sourceTree = "<group>"; };
+		B0E9A2872AF16E3700770D43 /* FontRegisterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontRegisterManager.swift; sourceTree = "<group>"; };
 		B0E9A2892AF303AD00770D43 /* URLResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLResolver.swift; sourceTree = "<group>"; };
 		B0FB21372AD5FEEC0086DEC1 /* CSSFontFamily.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSFontFamily.swift; sourceTree = "<group>"; };
 		B0FB213A2AD600480086DEC1 /* CSSGlobalValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSSGlobalValue.swift; sourceTree = "<group>"; };
@@ -646,7 +646,7 @@
 		B0E9A2862AF16E2C00770D43 /* Other */ = {
 			isa = PBXGroup;
 			children = (
-				B0E9A2872AF16E3700770D43 /* RegisteredFontManager.swift */,
+				B0E9A2872AF16E3700770D43 /* FontRegisterManager.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -837,7 +837,7 @@
 				B01D7B6A2ABDF4E200677F29 /* EPUBContentDocumentParser.swift in Sources */,
 				B01D7AFC2AAFC53C00677F29 /* SharedDateFormatter.swift in Sources */,
 				B0CB33952AD49E7C00DD5BE0 /* HTMLElementType.swift in Sources */,
-				B0E9A2882AF16E3700770D43 /* RegisteredFontManager.swift in Sources */,
+				B0E9A2882AF16E3700770D43 /* FontRegisterManager.swift in Sources */,
 				B01D7AEA2AABCB7600677F29 /* EPUBParser.swift in Sources */,
 				B077811F2AA8EC9100A53EF8 /* AppManager.swift in Sources */,
 				B0C59D8D2AD1A62A001525B4 /* UIColor+RGBA.swift in Sources */,

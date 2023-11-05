@@ -111,7 +111,7 @@ class EPUBDataProviderAutoParse: Loggable, EPUBDataProvider {
                                            let hrefValueRange = Range(hrefMatch.range(at: 1), in: linkString) {
                                             let href = String(linkString[hrefValueRange])
                                             
-                                            let cssFileUrl = url.deletingLastPathComponent().appendingPathComponent(href)
+                                            guard let cssFileUrl = URLResolver.resolveResource(path: href, linkedFrom: url) else { continue }
                                             
                                             var cssFile: String?
                                             if let existing = cssFiles[cssFileUrl] {

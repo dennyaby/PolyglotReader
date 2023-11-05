@@ -170,11 +170,11 @@ final class CSSParserTests: XCTestCase {
         
         let charis1Src1 = charis1!.src[0]
         XCTAssertEqual(charis1Src1.sourceType, .local)
-        XCTAssertEqual(charis1Src1.path, "CharisSILR")
+        XCTAssertEqual(charis1Src1.url.lastPathComponent, "CharisSILR")
         
         let charis1Src2 = charis1!.src[1]
         XCTAssertEqual(charis1Src2.sourceType, .url)
-        XCTAssertEqual(charis1Src2.path, "fonts/CharisSILR.ttf")
+        XCTAssertEqual(charis1Src2.url.pathComponents.suffix(2).joined(separator: "/"), "fonts/CharisSILR.ttf")
         
         
         
@@ -188,7 +188,7 @@ final class CSSParserTests: XCTestCase {
         
         let charis2Src = charis2!.src[0]
         XCTAssertEqual(charis2Src.sourceType, .url)
-        XCTAssertEqual(charis2Src.path, "fonts/CharisSILB.ttf")
+        XCTAssertEqual(charis2Src.url.pathComponents.suffix(2).joined(separator: "/"), "fonts/CharisSILB.ttf")
         
         
         
@@ -202,7 +202,7 @@ final class CSSParserTests: XCTestCase {
         
         let charis3Src = charis3!.src[0]
         XCTAssertEqual(charis3Src.sourceType, .local)
-        XCTAssertEqual(charis3Src.path, "CharisSILI")
+        XCTAssertEqual(charis3Src.url.lastPathComponent, "CharisSILI")
         
         
         
@@ -216,7 +216,7 @@ final class CSSParserTests: XCTestCase {
         
         let charis4Src = charis4!.src[0]
         XCTAssertEqual(charis4Src.sourceType, .url)
-        XCTAssertEqual(charis4Src.path, "fonts/CharisSILBI.ttf")
+        XCTAssertEqual(charis4Src.url.pathComponents.suffix(2).joined(separator: "/"), "fonts/CharisSILBI.ttf")
     }
     
     // MARK: - Helper

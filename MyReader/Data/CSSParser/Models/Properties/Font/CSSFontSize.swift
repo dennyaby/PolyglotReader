@@ -20,6 +20,27 @@ enum CSSFontSize: Equatable {
         case xLarge = "x-large"
         case xxLarge = "xx-large"
         case xxxLarge = "xxx-large"
+        
+        var multiplier: CGFloat {
+            switch self {
+            case .xxSmall:
+                return 0.3
+            case .xSmall:
+                return 0.5
+            case .small:
+                return 0.7
+            case .medium:
+                return 1
+            case .large:
+                return 1.3
+            case .xLarge:
+                return 1.7
+            case .xxLarge:
+                return 2
+            case .xxxLarge:
+                return 2.4
+            }
+        }
     }
     
     enum Relative: String, Equatable {

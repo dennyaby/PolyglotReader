@@ -67,4 +67,21 @@ enum CSSFontFamily: Hashable {
             }
         }
     }
+    
+    // MARK: - Interface
+    
+    func name() -> String? {
+        switch self {
+        case .families(let families):
+            guard let family = families.first else { return nil }
+            switch family {
+            case .generic(let family):
+                return family.rawValue
+            case .specific(let family):
+                return family
+            }
+        default:
+            return nil
+        }
+    }
 }
