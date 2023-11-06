@@ -88,19 +88,24 @@ final class BookListViewController: UIViewController, UIDocumentPickerDelegate, 
         }
         
         if let id = book.id {
-            try? appManager.dataStorage.deleted(bookId: id)
+            try? appManager.dataStorage.delete(bookId: id)
         }
     }
     
     private func open(book: Book) {
         log("Open book with name \(book.title ?? "No name")")
         
-        guard let readerVC = ReaderViewController(appManager: appManager, book: book) else {
+        var bookCopy = book
+        bookCopy.lastOpenedDate = Date()
+        try? appManager.dataStorage.update(book: bookCopy)
+        
+        guard let readerVC = ReaderViewController(appManager: appManager, book: bookCopy) else {
             let alert = UIAlertController(title: "Error", message: "Cannot open book, try to reimport it to you library.", preferredStyle: .alert)
             alert.addAction(.init(title: "OK", style: .default))
             present(alert, animated: true)
             return
         }
+        
         readerVC.modalPresentationStyle = .fullScreen
         present(readerVC, animated: true)
     }

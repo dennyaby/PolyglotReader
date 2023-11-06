@@ -7,6 +7,7 @@
 
 import UIKit
 
+// TODO: Perform all content loading in background thread
 final class ReaderViewController: UIViewController, Loggable, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, ReaderCollectionViewCellDelegate {
     
     // MARK: - Nested Types
@@ -19,11 +20,7 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
     // MARK: - Properties
     
     private let appManager: AppManager
-    private let book: Book
-    private let epubDataProvider: EPUBDataProvider
-    private var pagesFrames: [[CTFrame]] = []
-    private var attributedTexts: [NSAttributedString] = []
-    private var imagesInfo: [[Int: [ImageInfo]]] = []
+    private let bookContentManager: BookContentManager
     
     private let collectionView: UICollectionView
     private var horizontalSpacing: CGFloat = 15
@@ -41,12 +38,11 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
     // MARK: - Init
     
     init?(appManager: AppManager, book: Book) {
-        guard let epubDataProvider = EPUBDataProviderManualParse(appManager: appManager, book: book) else {
+        guard let bookContentManager = BookContentManager(appManager: appManager, book: book) else {
             return nil
         }
-        self.epubDataProvider = epubDataProvider
+        self.bookContentManager = bookContentManager
         self.appManager = appManager
-        self.book = book
         
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .horizontal
@@ -55,10 +51,12 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
         super.init(nibName: nil, bundle: nil)
     }
     
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - UIViewController Lifecycle
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -68,8 +66,14 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
             if pageSize != self.pageSize {
                 self.pageSize = pageSize
                 
-                reloadBookLayout(from: epubDataProvider.bookContents(config: .standard, pageSize: pageSize))
+                print("Reloading for page size: \(pageSize)")
+                bookContentManager.reloadLayout(pageSize: pageSize)
                 collectionView.reloadData()
+                
+                let (section, item) = bookContentManager.getCurrentDocumentAndPageIndexes()
+                collectionView.scrollToItem(at: IndexPath(item: item, section: section), at: .centeredHorizontally, animated: false)
+                
+                // TODO: Layout is completely broken when turn to landscape mode.
             }
         }
     }
@@ -107,105 +111,30 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
         
     }
     
-    // MARK: - Book Layout
-    
-    private func reloadBookLayout(from content: [EPUBDataProviderResult]) {
-        let start = Date()
-        self.pagesFrames = []
-        self.attributedTexts = []
-        self.imagesInfo = []
-        
-        for documentInfo in content {
-            var imageIndex = 0
-            var imageInfo: [Int: [ImageInfo]] = [:]
-            var pageFrames: [CTFrame] = []
-            var page = 0
-            
-            let framesetter = CTFramesetterCreateWithAttributedString(documentInfo.attributedString as CFAttributedString)
-            
-            var textPosition = 0
-            while textPosition < documentInfo.attributedString.length {
-                let path = CGMutablePath()
-                path.addRect(CGRect(origin: .zero, size: pageSize))
-                
-                let ctframe = CTFramesetterCreateFrame(framesetter, CFRangeMake(textPosition, 0), path, nil)
-                
-                let frameRange = CTFrameGetVisibleStringRange(ctframe)
-                textPosition += max(frameRange.length, 1)
-                
-                pageFrames.append(ctframe)
-                
-                while imageIndex < documentInfo.images.count && documentInfo.images[imageIndex].location < textPosition {
-                    let image = documentInfo.images[imageIndex]
-                    
-                    let lines = CTFrameGetLines(ctframe) as NSArray
-                    var origins = [CGPoint](repeating: .zero, count: lines.count)
-                    CTFrameGetLineOrigins(ctframe, CFRangeMake(0, 0), &origins)
-                    
-                    let location = image.location
-   
-                    for lineIndex in 0..<lines.count {
-                        let line = lines[lineIndex] as! CTLine
-                        if let glyphRuns = CTLineGetGlyphRuns(line) as? [CTRun] {
-                            for run in glyphRuns {
-                                let runRange = CTRunGetStringRange(run)
-                                if runRange.location > location || runRange.location + runRange.length <= location {
-                                    continue
-                                }
-                                
-                                var imgBounds: CGRect = .zero
-                                var ascent: CGFloat = 0
-                                imgBounds.size.width = CGFloat(CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, nil, nil))
-                                imgBounds.size.height = ascent
-                                
-                                let xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil)
-                                imgBounds.origin.x = origins[lineIndex].x + xOffset
-                                imgBounds.origin.y = origins[lineIndex].y
-                                
-                                var images = imageInfo[page] ?? []
-                                images.append(.init(url: image.url, frame: imgBounds))
-                                imageInfo[page] = images
-                                
-                                break
-                            }
-                        }
-                    }
-                    
-                    imageIndex += 1
-                }
-                
-                page += 1
-            }
-            
-            self.imagesInfo.append(imageInfo)
-            self.pagesFrames.append(pageFrames)
-            
-        }
-        // TODO: This could be bottleneck, I need to optimize this somehow for huge texts
-        /*
-         
-         Idea - When I open the book, I need to find the place I am in. Is there a faster way then current? If yes, I can find page I need using binary search, display it and then calculate in background all other pages going repeadely in both directions. There should be something like fault system for pages (like I have full array of pagesFrames, but some are loaded and some no.
-         */
-        print("Time reload book layout = \(Date().timeIntervalSince(start))")
-    }
-    
     // MARK: - UICollectionViewDataSource && UICollectionViewDelegate
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return pagesFrames.count
+        return bookContentManager.numberOfDocuments()
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return pagesFrames[section].count
+        return bookContentManager.numberOfPages(for: section)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: ReaderCollectionViewCell.self), for: indexPath) as! ReaderCollectionViewCell
         cell.leadingSpacing = horizontalSpacing
-        cell.ctFrame = pagesFrames[indexPath.section][indexPath.item]
+        cell.ctFrame = bookContentManager.ctFrame(forDocument: indexPath.section, page: indexPath.row)
         cell.delegate = self
         cell.setNeedsDisplay()
         return cell
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        guard let centerIndexPath = collectionView.getCenterCellIndexPath() else { return }
+        
+        bookContentManager.saveBookLocation(documentIndex: centerIndexPath.section, page: centerIndexPath.item)
+        // TODO: Check that this method is called in every situation when page is changed
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -226,17 +155,7 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
         guard let indexPath = collectionView.indexPath(for: cell) else {
             return []
         }
-        
-        guard let imageInfo = self.imagesInfo[indexPath.section][indexPath.item] else {
-            return []
-        }
-        
-        var result: [ReaderCollectionViewCell.ImageInfo] = []
-        for image in imageInfo {
-            guard let uiImage = epubDataProvider.image(for: image.url) else { continue }
-            result.append(.init(image: uiImage, frame: image.frame))
-        }
-        return result
+        return bookContentManager.getImages(for: indexPath.section, page: indexPath.item)
     }
     
     // MARK: - Actions

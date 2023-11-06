@@ -26,6 +26,7 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
     
     private let htmlParser = HTMLParser()
     private let cssParser = CSSParser()
+    private var cssParseCache: [[URL]: CSSParserResult] = [:]
     private var style: CSSParserResult?
     
     private let attributesManager = AttributesManager()
@@ -129,6 +130,10 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
             return nil
         }
         
+        if let existing = cssParseCache[urls] {
+            return existing
+        }
+        
         let filesContent = urls.compactMap { url -> String? in
             guard let data = try? Data(contentsOf: url) else {
                 return nil
@@ -141,10 +146,14 @@ final class EPUBContentDocumentParser: NSObject, XMLParserDelegate {
         }
         
         let oneBigFile = filesContent.joined(separator: "\n")
-        return cssParser.parse(string: oneBigFile, baseUrl: urls.last!) // TODO: urls.last is bad idea, it will break custom font faces for second and next style files
+        let parseResult =  cssParser.parse(string: oneBigFile, baseUrl: urls.last!) // TODO: urls.last is bad idea, it will break custom font faces for second and next style files
+        cssParseCache[urls] = parseResult
+        return parseResult
     }
     
     private func convertToDocumentElement(_ buildResult: [BuildDocumentResult.Element]) -> [DocumentResult.Element] {
+        guard buildResult.count > 0 else { return [] }
+        
         var result = buildResult.map({ $0.element })
         for index in 0..<buildResult.count - 1 {
             if buildResult[index + 1].requestNewLine {

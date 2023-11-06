@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22G90" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+    <entity name="BookCDModel" representedClassName="BookCDModel" syncable="YES" codeGenerationType="class">
+        <attribute name="addedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="author" optional="YES" attributeType="String"/>
+        <attribute name="bookId" optional="YES" attributeType="String"/>
+        <attribute name="coverPath" optional="YES" attributeType="String"/>
+        <attribute name="languages" optional="YES" attributeType="String"/>
+        <attribute name="lastOpenedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="locationDocumentId" optional="YES" attributeType="String"/>
+        <attribute name="locationOffset" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="highlights" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="BookHighlightCDModel" inverseName="book" inverseEntity="BookHighlightCDModel"/>
+    </entity>
+    <entity name="BookHighlightCDModel" representedClassName="BookHighlightCDModel" syncable="YES" codeGenerationType="class">
+        <attribute name="color" attributeType="String" defaultValueString=""/>
+        <attribute name="documentId" attributeType="String" defaultValueString=""/>
+        <attribute name="length" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="locationOffset" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="book" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BookCDModel" inverseName="highlights" inverseEntity="BookCDModel"/>
+    </entity>
+</model>

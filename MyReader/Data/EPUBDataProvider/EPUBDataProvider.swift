@@ -18,6 +18,7 @@ struct EPUBDataProviderConfig {
 
 struct EPUBDataProviderResult {
     let attributedString: NSAttributedString
+    let documentId: String
     let images: [EPUBDataProvderImageInfo]
 }
 

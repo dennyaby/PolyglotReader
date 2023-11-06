@@ -18,6 +18,7 @@ final class CDDataStorage: DataStorage {
     enum StorageError: Error {
         case noManagedObjectContext
         case cannotFindBookWithId
+        case cannotFindHighlightWithId
     }
     
     static let sqliteFileName = "db.sqlite"
@@ -102,7 +103,7 @@ final class CDDataStorage: DataStorage {
     
     func getAllBooks() throws -> [Book] {
         var result: [Book] = []
-        try performSaveMainThread { context in
+        try performInMainThread { context in
             let fetchRequest = BookCDModel.fetchRequest()
             fetchRequest.sortDescriptors = [NSSortDescriptor(key: "lastOpenedDate", ascending: false)]
             let books = try context.fetch(fetchRequest)
@@ -112,7 +113,7 @@ final class CDDataStorage: DataStorage {
     }
     
     func importNew(book: Book) throws {
-        try performSaveMainThread { context in
+        try performInMainThread { context in
             let cdBook = BookCDModel(context: context)
             assignProperties(to: cdBook, from: book)
             try context.save()
@@ -121,20 +122,21 @@ final class CDDataStorage: DataStorage {
         }
     }
     
-    func opened(book: Book) throws {
-        try performSaveMainThread { context in
+    func update(book: Book) throws {
+        try performInMainThread { context in
             guard let id = book.id, let cdBook = try context.existingObject(with: id) as? BookCDModel else {
                 throw StorageError.cannotFindBookWithId
             }
             
-            cdBook.lastOpenedDate = Date()
+            assignProperties(to: cdBook, from: book)
+            
             try context.save()
             notifyDelegateOfUpdate()
         }
     }
     
-    func deleted(bookId: Book.ID) throws {
-        try performSaveMainThread { context in
+    func delete(bookId: Storage.ID) throws {
+        try performInMainThread { context in
             guard let cdBook = try context.existingObject(with: bookId) as? BookCDModel else {
                 throw StorageError.cannotFindBookWithId
             }
@@ -145,9 +147,49 @@ final class CDDataStorage: DataStorage {
         }
     }
     
+    func highlightsFor(book: Book) throws -> [BookHighlight] {
+        var result: [BookHighlight] = []
+        try performInMainThread { context in
+            guard let id = book.id, let cdBook = try context.existingObject(with: id) as? BookCDModel else {
+                throw StorageError.cannotFindBookWithId
+            }
+            
+            result = (cdBook.highlights?.allObjects as? [BookHighlightCDModel] ?? [])
+                .map(cdBookHighlightToBookHighlight)
+        }
+        return result
+    }
+    
+    func add(highlight: BookHighlight, to book: Book) throws {
+        try performInMainThread { context in
+            guard let id = book.id, let cdBook = try context.existingObject(with: id) as? BookCDModel else {
+                throw StorageError.cannotFindBookWithId
+            }
+            let cdBookHighlight = BookHighlightCDModel(context: context)
+            assignProperties(to: cdBookHighlight, from: highlight)
+            cdBook.addToHighlights(cdBookHighlight)
+            try context.save()
+            
+            notifyDelegateOfUpdate()
+        }
+    }
+    
+    func delete(highlightId: Storage.ID) throws {
+        try performInMainThread { context in
+            guard let cdHighlight = try context.existingObject(with: highlightId) as? BookHighlightCDModel else {
+                throw StorageError.cannotFindHighlightWithId
+            }
+//            cdHighlight.book = nil // TODO: Check that highlight is deleted
+            context.delete(cdHighlight)
+            try context.save()
+            
+            notifyDelegateOfUpdate()
+        }
+    }
+    
     // MARK: - Helper
     
-    private func performSaveMainThread(_ block: (NSManagedObjectContext) throws -> ()) throws {
+    private func performInMainThread(_ block: (NSManagedObjectContext) throws -> ()) throws {
         guard isInitialized, let context = viewContext else {
             throw StorageError.noManagedObjectContext
         }
@@ -162,7 +204,15 @@ final class CDDataStorage: DataStorage {
     }
     
     private func cdBookToBook(_ cdBook: BookCDModel) -> Book {
-        return Book(id: cdBook.objectID, bookId: cdBook.bookId, title: cdBook.title, author: cdBook.author, lastOpenedDate: cdBook.lastOpenedDate, addedDate: cdBook.addedDate, languages: cdBook.languages, coverPath: cdBook.coverPath)
+        var location: BookLocation?
+        if let locationDocumentId = cdBook.locationDocumentId {
+            location = .init(documentId: locationDocumentId, offset: Int(cdBook.locationOffset))
+        }
+        return Book(id: cdBook.objectID, bookId: cdBook.bookId, title: cdBook.title, author: cdBook.author, lastOpenedDate: cdBook.lastOpenedDate, addedDate: cdBook.addedDate, languages: cdBook.languages, coverPath: cdBook.coverPath, location: location)
+    }
+    
+    private func cdBookHighlightToBookHighlight(_ cdHighlight: BookHighlightCDModel) -> BookHighlight {
+        return BookHighlight(id: cdHighlight.objectID, startLocation: .init(documentId: cdHighlight.documentId!, offset: Int(cdHighlight.locationOffset)), length: Int(cdHighlight.length), color: cdHighlight.color)
     }
     
     private func assignProperties(to cdBook: BookCDModel, from book: Book) {
@@ -173,6 +223,20 @@ final class CDDataStorage: DataStorage {
         cdBook.coverPath = book.coverPath
         cdBook.languages = book.languages
         cdBook.lastOpenedDate = book.lastOpenedDate
+        if let location = book.location {
+            cdBook.locationDocumentId = location.documentId
+            cdBook.locationOffset = Int64(location.offset)
+        } else {
+            cdBook.locationDocumentId = nil
+            cdBook.locationOffset = 0
+        }
+    }
+    
+    private func assignProperties(to cdBookHighlight: BookHighlightCDModel, from highlight: BookHighlight) {
+        cdBookHighlight.documentId = highlight.startLocation.documentId
+        cdBookHighlight.locationOffset = Int64(highlight.startLocation.offset)
+        cdBookHighlight.length = Int64(highlight.length)
+        cdBookHighlight.color = highlight.color
     }
     
     private func notifyDelegateOfUpdate(books: [Book]? = nil) {

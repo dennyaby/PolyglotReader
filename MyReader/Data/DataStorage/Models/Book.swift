@@ -8,15 +8,13 @@
 import CoreData
 
 struct Book {
-    
-    typealias ID = NSManagedObjectID
-    
-    let id: ID?
+    let id: Storage.ID?
     let bookId: String?
     let title: String?
     let author: String?
-    let lastOpenedDate: Date?
+    var lastOpenedDate: Date?
     let addedDate: Date?
     let languages: String?
     let coverPath: String?
+    var location: BookLocation?
 }

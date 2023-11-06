@@ -85,7 +85,7 @@ final class BookImportManager: Loggable {
             
             let opfResult = parseResult.opfContainerParserResult
  
-            try dataStorage.importNew(book: Book(id: nil, bookId: bookId, title: opfResult.titles.first, author: opfResult.creator, lastOpenedDate: nil, addedDate: Date(), languages: opfResult.languages.joined(separator: ","), coverPath: getPathToCover(parseResult: parseResult)))
+            try dataStorage.importNew(book: Book(id: nil, bookId: bookId, title: opfResult.titles.first, author: opfResult.creator, lastOpenedDate: nil, addedDate: Date(), languages: opfResult.languages.joined(separator: ","), coverPath: getPathToCover(parseResult: parseResult), location: nil))
         } catch {
             print(error)
             do {

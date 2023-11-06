@@ -56,6 +56,7 @@ final class CSSParser {
     }
     
     func parse(string: String, baseUrl: URL) -> CSSParserResult? {
+        print("Parsing css: \(baseUrl)")
         guard let selectorRegExp = Self.selectorsRegularExpression,
               let propertyRegExp = Self.propertiesRegularExpression else {
             return nil

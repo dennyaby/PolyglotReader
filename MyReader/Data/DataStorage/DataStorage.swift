@@ -17,9 +17,12 @@ protocol DataStorage: AnyObject {
     
     func initialize() throws
     func getAllBooks() throws -> [Book]
-    func opened(book: Book) throws
-    func deleted(bookId: Book.ID) throws
+    func update(book: Book) throws
+    func delete(bookId: Storage.ID) throws
     func importNew(book: Book) throws
+    func highlightsFor(book: Book) throws -> [BookHighlight]
+    func add(highlight: BookHighlight, to book: Book) throws
+    func delete(highlightId: Storage.ID) throws
     
     // TODO: Implement using CoreData, Realm, SQLIte
 }

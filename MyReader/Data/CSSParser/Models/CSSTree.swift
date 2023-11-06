@@ -89,6 +89,7 @@ struct CSSTree<PropertyType> {
     
     // MARK: - Matching
     
+    // TODO: This is slow. Should be optimized. Or parsing should be dynamic, don't parse everything in the beginning.
     func match(entity: CSSEntity) -> [MatchResultItem] {
         var result: [MatchResultItem] = []
         
