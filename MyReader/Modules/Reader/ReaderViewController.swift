@@ -21,9 +21,11 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
     
     private let appManager: AppManager
     private let bookContentManager: BookContentManager
+    private let textSelectionManager: TextSelectionManager
     
     private let collectionView: UICollectionView
     private var horizontalSpacing: CGFloat = 15
+    private var verticalSpacing: CGFloat = 45
     private var pageSize: CGSize = .zero
     
     private let backButton: UIButton = {
@@ -47,8 +49,12 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .horizontal
         self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        
+        self.textSelectionManager = .init(collectionView: collectionView)
  
         super.init(nibName: nil, bundle: nil)
+        
+        update(horizontalSpacing: horizontalSpacing, verticalSpacing: verticalSpacing)
     }
     
     
@@ -62,7 +68,7 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
         super.viewDidLayoutSubviews()
         
         if view.bounds.size != .zero {
-            let pageSize = CGSize(width: floor(collectionView.bounds.width - horizontalSpacing * 2), height: floor(collectionView.bounds.height))
+            let pageSize = CGSize(width: floor(collectionView.bounds.width - horizontalSpacing * 2), height: floor(collectionView.bounds.height - verticalSpacing * 2))
             if pageSize != self.pageSize {
                 self.pageSize = pageSize
                 
@@ -73,12 +79,14 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
                 let (section, item) = bookContentManager.getCurrentDocumentAndPageIndexes()
                 collectionView.scrollToItem(at: IndexPath(item: item, section: section), at: .centeredHorizontally, animated: false)
                 
+                let page = bookContentManager.ctFrame(forDocument: section, page: item)
+                let string = bookContentManager.string(forDocument: section)
+                textSelectionManager.set(ctFrame: page, string: string)
+                
                 // TODO: Layout is completely broken when turn to landscape mode.
             }
         }
     }
-    
-    // MARK: - UIViewController Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -108,7 +116,6 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
          collectionView.topAnchor.constraint(equalTo: backButton.bottomAnchor, constant: 10),
          collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
          collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)].activate()
-        
     }
     
     // MARK: - UICollectionViewDataSource && UICollectionViewDelegate
@@ -124,6 +131,7 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: ReaderCollectionViewCell.self), for: indexPath) as! ReaderCollectionViewCell
         cell.leadingSpacing = horizontalSpacing
+        cell.topSpacing = verticalSpacing
         cell.ctFrame = bookContentManager.ctFrame(forDocument: indexPath.section, page: indexPath.row)
         cell.delegate = self
         cell.setNeedsDisplay()
@@ -134,6 +142,10 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
         guard let centerIndexPath = collectionView.getCenterCellIndexPath() else { return }
         
         bookContentManager.saveBookLocation(documentIndex: centerIndexPath.section, page: centerIndexPath.item)
+        
+        let ctFrame = bookContentManager.ctFrame(forDocument: centerIndexPath.section, page: centerIndexPath.item)
+        let string = bookContentManager.string(forDocument: centerIndexPath.section)
+        textSelectionManager.set(ctFrame: ctFrame, string: string)
         // TODO: Check that this method is called in every situation when page is changed
     }
     
@@ -162,5 +174,13 @@ final class ReaderViewController: UIViewController, Loggable, UICollectionViewDa
     
     @objc private func backAction() {
         dismiss(animated: true)
+    }
+    
+    // MARK: - Helper
+    
+    private func update(horizontalSpacing: CGFloat, verticalSpacing: CGFloat) {
+        self.horizontalSpacing = horizontalSpacing
+        self.verticalSpacing = verticalSpacing
+        textSelectionManager.set(textInsets: .init(top: verticalSpacing, left: horizontalSpacing, bottom: verticalSpacing, right: horizontalSpacing))
     }
 }

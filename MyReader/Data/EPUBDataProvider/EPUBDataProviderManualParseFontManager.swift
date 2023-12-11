@@ -78,7 +78,6 @@ extension EPUBDataProviderManualParse {
                 for source in fontFace.src {
                     do {
                         try FontRegisterManager.registerFontIfNeeded(url: source.url, by: fontFace.family.name())
-                        print("Font has been registered")
                     } catch {
                         print("Error registering a font: \(error)")
                     }

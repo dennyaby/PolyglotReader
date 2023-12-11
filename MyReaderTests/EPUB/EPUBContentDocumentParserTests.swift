@@ -103,5 +103,4 @@ final class EPUBContentDocumentParserTests: XCTestCase {
     private func urlFor(htmlWith name: String) -> URL? {
         return Bundle.test?.url(forResource: name, withExtension: "html")
     }
-    
 }

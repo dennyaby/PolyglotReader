@@ -1,5 +1,7 @@
 # Ideas
 
+0. Add library of free resources for languages (some classic works, articles, something). Maybe add supervised translations or guides on grammatic structure seen in text. Still add posibility to add your own books. And add book store.
+
 1. Functionality to add place where user has finished reading (exact place on the page). So when user continues to read this mark is reset, or when user adds new mark old is erased. 
 2. Think about folders (custom folders (user create what he wants) or auto filtering (by language for example)).
 3. Some cool custom animation when opening and closing a book.
@@ -16,6 +18,7 @@
 14. Add ability to read internet articles (like read mode in Safari). With ability to download page, translate text and add to Anki.
 15. Give goals to one read (for example - read 1%, read 10 pages etc.). When user starts the goal, all interface that telling him about the goal is hidden (like number of pages). It looks like focus mode. When user reaches the goal, app tells him that.
 16. Export notes as file, MD file, or to Notion(is it possible?).
+17. Highlight problematic places and work them together with language teacher, that you can book and work with through our app.
 
 
 

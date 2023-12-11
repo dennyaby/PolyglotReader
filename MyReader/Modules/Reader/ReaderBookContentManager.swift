@@ -15,6 +15,7 @@ extension ReaderViewController {
             let id: String
             let pageFrames: [CTFrame]
             let imagesInfo: [Int: [ImageInfo]]
+            let string: NSAttributedString
         }
         
         // MARK: - Properties
@@ -47,6 +48,10 @@ extension ReaderViewController {
         
         func ctFrame(forDocument documentIndex: Int, page: Int) -> CTFrame {
             return documents[documentIndex].pageFrames[page]
+        }
+        
+        func string(forDocument documentIndex: Int) -> NSAttributedString {
+            return documents[documentIndex].string
         }
         
         func reloadLayout(pageSize: CGSize) {
@@ -158,7 +163,7 @@ extension ReaderViewController {
                     page += 1
                 }
                 
-                documents.append(.init(id: documentInfo.documentId, pageFrames: pageFrames, imagesInfo: imageInfo))
+                documents.append(.init(id: documentInfo.documentId, pageFrames: pageFrames, imagesInfo: imageInfo, string: documentInfo.attributedString))
             }
             // TODO: This could be bottleneck, I need to optimize this somehow for huge texts
             /*

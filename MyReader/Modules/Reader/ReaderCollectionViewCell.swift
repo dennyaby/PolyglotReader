@@ -25,6 +25,7 @@ final class ReaderCollectionViewCell: UICollectionViewCell {
     
     var ctFrame: CTFrame?
     var leadingSpacing: CGFloat = 0
+    var topSpacing: CGFloat = 0
     
     weak var delegate: ReaderCollectionViewCellDelegate?
     
@@ -46,7 +47,7 @@ final class ReaderCollectionViewCell: UICollectionViewCell {
         guard let ctFrame = ctFrame, let context = UIGraphicsGetCurrentContext() else { return }
         
         context.textMatrix = .identity
-        context.translateBy(x: leadingSpacing, y: bounds.size.height)
+        context.translateBy(x: leadingSpacing, y: bounds.size.height - topSpacing)
         context.scaleBy(x: 1.0, y: -1.0)
 
         CTFrameDraw(ctFrame, context)
@@ -55,8 +56,6 @@ final class ReaderCollectionViewCell: UICollectionViewCell {
             guard let cgImage = imageInfo.image.cgImage else { continue }
             context.draw(cgImage, in: imageInfo.frame)
         }
-        
-        print("Draw call")
     }
     
     
